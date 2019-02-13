@@ -43,38 +43,6 @@ if ( ! class_exists( 'MS_Devices_Main' ) ) {
 		}
 
 
-		private static function get_location_makerspace($name, $room) {
-			return array(
-					'post_title'  => __( $name ),
-					'post_status' => 'publish',
-					'post_author' => $current_user->ID,
-					'post_type'   => 'locations',
-					'meta_input'  => array(
-						'room_number'	=> $room,
-					)
-				);
-		}
-		private static function get_location_sfz($name, $room) {
-			return array(
-					'post_title'  	=> __( $name ),
-					'post_status' 	=> 'publish',
-					'post_author' 	=> $current_user->ID,
-					'post_type'   	=> 'locations',
-					'meta_input'  	=> array(
-						'opening_time_monday'		=> '15:00 - 19:00',
-						'opening_time_tuesday'		=> '15:00 - 19:00',
-						'opening_time_wednesday'	=> '15:00 - 19:00',
-						'opening_time_thursday'		=> '15:00 - 19:00',
-						'opening_time_friday'		=> '15:00 - 19:00',
-						'opening_time_saturday'		=> '15:00 - 19:00',
-						'opening_time_sunday'		=> '15:00 - 19:00',
-
-						'room_number'				=> $room,
-					)
-				);
-		}
-
-
 		public static function activate() {
 
 			

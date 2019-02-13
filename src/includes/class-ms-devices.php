@@ -1,5 +1,8 @@
 <?php
 
+require_once( plugin_dir_path( MS_DM_FILE ) . '/src/models/devices/device.model.php' );
+
+
 /**
  * The file that defines the core plugin class
  *
@@ -57,6 +60,10 @@ class MS_Devices {
 	 */
 	protected $version;
 
+
+	protected $devices;
+	protected $items;
+
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -79,6 +86,12 @@ class MS_Devices {
 		//$this->define_admin_hooks();
 		$this->define_public_hooks();
 
+		$this->loader->add_action('admin_enqueue_scripts', $this, 'admin_style');
+	}
+
+	function admin_style() {
+		wp_enqueue_style('admin-styles', plugin_dir_path( MS_DM_FILE ) . '/src/styles/bootstrap.min.css');
+		wp_enqueue_style('admin-styles', plugin_dir_path( MS_DM_FILE ) . '/src/styles/admin.css');
 	}
 
 	/**
@@ -196,27 +209,6 @@ class MS_Devices {
 	}
 
 
-	private function register_posttype_devices () {
-
-		$labels = array(
-			'name'          => __('Geräte'),
-			'singular_name' => __('Gerät'),
-			'edit_item' 	=> __('Gerät bearbeiten'),
-		);
-
-		$args = array(
-			'labels'      => $labels,
-			'public'      => true,
-			'has_archive' => true,
-			'menu_icon'		  => plugin_dir_url( MS_DM_FILE ) . '/src/menu-icon.png',
-			'supports'    => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields', 'revisions' ),
-			'taxonomies'  => array( 'category', 'post_tag', 'locations' ),
-		);
-	
-		register_post_type( 'devices', $args );
-	}
-
-
 	
 
 	private function register_posttype_items () {
@@ -243,31 +235,20 @@ class MS_Devices {
 	}
 
 
-	public function wpt_events_location() {
-		require( plugin_dir_path( MS_DM_FILE ) . 'src/partials/metabox-items.php' );
-	}
-
-	public function add_metaboxes() {
-
-		add_meta_box(
-			'items_price_metabox',
-			'Preis pro Einheit',
-			array( $this, 'wpt_events_location' ),
-			'items',
-			'normal',
-			'default'
-		);
-	}
+	
 
 
 	public function register_post_types() {
+
+	 	$this->devices = new DeviceModel();
+		$this->devices->register();
 		
-		$this->register_posttype_devices();
 		$this->register_posttype_items();
 		
 		$this->register_taxonomies();
 
-		add_action( 'add_meta_boxes', array( $this, 'add_metaboxes' ) );
+
+
 
 	}
 }
