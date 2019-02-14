@@ -1,6 +1,6 @@
 <?php
 
-require_once( plugin_dir_path( MS_DM_FILE ) . '/src/models/devices/device.model.php' );
+require_once MS_DM_DIR . '/src/includes/class-logger.php';
 
 
 /**
@@ -60,10 +60,6 @@ class MS_Devices {
 	 */
 	protected $version;
 
-
-	protected $devices;
-	protected $items;
-
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -86,12 +82,6 @@ class MS_Devices {
 		//$this->define_admin_hooks();
 		$this->define_public_hooks();
 
-		$this->loader->add_action('admin_enqueue_scripts', $this, 'admin_style');
-	}
-
-	function admin_style() {
-		wp_enqueue_style('admin-styles', plugin_dir_path( MS_DM_FILE ) . '/src/styles/bootstrap.min.css');
-		wp_enqueue_style('admin-styles', plugin_dir_path( MS_DM_FILE ) . '/src/styles/admin.css');
 	}
 
 	/**
@@ -137,6 +127,10 @@ class MS_Devices {
 
 		$this->loader = new MS_Devices_Loader();
 
+		
+		
+		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_styles');
+
 	}
 
 	/**
@@ -165,7 +159,15 @@ class MS_Devices {
 	 */
 	private function define_public_hooks() {
 
+		//$this->loader->add_action( 'init', $this, 'register_taxonomies' );
 		$this->loader->add_action( 'init', $this, 'register_post_types' );
+
+		$this->loader->add_action( 'add_meta_boxes', $this, 'add_metaboxes' );
+		$this->loader->add_action( "init", $this, 'save_custom_meta_box' );
+
+	}
+
+	public function enqueue_styles () {
 
 	}
 
@@ -179,7 +181,8 @@ class MS_Devices {
 	}
 
 
-	
+	/** CUSTOM TAXONOMIES */
+
 	private function register_taxonomy_locations () {
 
 		$labels = array(
@@ -204,10 +207,35 @@ class MS_Devices {
 			$args );
 	}
 
-	private function register_taxonomies () {
-		$this->register_taxonomy_locations ();
+	private function register_taxonomy_device_categories () {
+		$labels = array(
+			'name'          => __('Gerätekategorien'),
+			'singular_name' => __('Gerätekategorie'),
+			'edit_item' 	=> __('Gerätekategorie bearbeiten'),
+		);
+
+		$args = array(
+			'labels'      	=> $labels,
+			'public'      	=> true,
+			//'menu_icon'		=> plugin_dir_url( MS_DM_FILE ) . '/src/menu-icon.png',
+			'show_ui'		=> true,
+			'show_in_menu'	=> true,
+			'hierarchical'	=> true,
+
+		);
+	
+		register_taxonomy( 
+			'device_categories', 
+			array('devices'),
+			$args );
 	}
 
+	private function register_taxonomies () {
+		$this->register_taxonomy_locations ();
+		$this->register_taxonomy_device_categories();
+	}
+
+	/** CUSTOM POSTTYPES */
 
 	
 
@@ -234,21 +262,86 @@ class MS_Devices {
 		
 	}
 
-
-	
-
-
 	public function register_post_types() {
-
-	 	$this->devices = new DeviceModel();
-		$this->devices->register();
-		
-		$this->register_posttype_items();
-		
 		$this->register_taxonomies();
 
+		require_once(plugin_dir_path( MS_DM_FILE ) . 'src/posttypes/devices.posttype.php');
+		DevicesPosttype::register();
 
-
-
+		$this->register_posttype_items();
 	}
+
+
+	/** METABOXES */
+
+	public function render_metabox_items() {
+		require( plugin_dir_path( MS_DM_FILE ) . 'src/partials/metabox-items.php' );
+	}
+
+	public function render_metabox_devices () {
+		require( plugin_dir_path( MS_DM_FILE ) . 'src/partials/metabox-devices.php' );
+	}
+
+	public function add_metaboxes() {
+
+		add_meta_box(
+			'items_price_metabox',
+			'Preis pro Einheit',
+			array( $this, 'render_metabox_items' ),
+			'items',
+			'normal',
+			'default'
+		);
+
+		add_meta_box(
+			'devices_metabox',
+			'Gerätespezifische Angaben',
+			array( $this, 'render_metabox_devices' ),
+			'devices',
+			'normal',
+			'high'
+		);
+
+		MSDM_Logger::Debug("register save_post_devices hook");
+	}
+
+	public function save_custom_meta_box ()
+	{
+		$pid = $_POST["post_ID"];
+
+
+		if ( $pid == NULL )
+			return;
+
+		// MSDM_Logger::Debug("post_id:" . $post_id);
+
+
+		if(!current_user_can("edit_post", $pid)){
+			MSDM_Logger::Debug('cannot edit post');
+			return $pid;
+		}
+
+		if(defined("DOING_AUTOSAVE") && DOING_AUTOSAVE){
+			MSDM_Logger::Debug('doing autosave');
+			return $pid;
+		}
+
+		if(isset($_POST["betriebsanweisung_attachment_id"])) {
+			$betriebsanweisung_attachment_id = $_POST["betriebsanweisung_attachment_id"];
+			update_post_meta($pid, "betriebsanweisung_attachment_id", $betriebsanweisung_attachment_id);
+		}
+
+		if(isset($_POST["datenblatt_attachment_id"])) {
+			$datenblatt_attachment_id = $_POST["datenblatt_attachment_id"];
+			update_post_meta($pid, "datenblatt_attachment_id", $datenblatt_attachment_id);
+		}
+
+		if(isset($_POST["bedienungsanleitung_attachment_id"])) {
+			$bedienungsanleitung_attachment_id = $_POST["bedienungsanleitung_attachment_id"];
+			update_post_meta($pid, "bedienungsanleitung_attachment_id", $bedienungsanleitung_attachment_id);
+		}
+	}
+
+
+	
 }

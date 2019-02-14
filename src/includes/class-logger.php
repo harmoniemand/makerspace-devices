@@ -10,6 +10,7 @@ if ( ! class_exists( 'MS_Device_Management_Logger' ) ) {
 	class MSDM_Logger {
         
         private static function writeMessage($msg) {
+            //echo "<script> console.log('wp-log: " . $msg . "'); </script>";
             file_put_contents( MS_DM_DIR . "/ms-dm.log", $msg . "\n", FILE_APPEND);
         }
         
