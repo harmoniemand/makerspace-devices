@@ -7,6 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once MS_DM_DIR . '/src/includes/class-logger.php';
 
+function remove_footer_admin () {
+	echo '';
+	}
+	
+	add_filter('admin_footer_text', 'remove_footer_admin');
 
 if ( ! class_exists( 'MS_Devices_Main' ) ) {
 

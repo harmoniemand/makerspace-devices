@@ -282,6 +282,10 @@ class MS_Devices {
 		require( plugin_dir_path( MS_DM_FILE ) . 'src/partials/metabox-devices.php' );
 	}
 
+	public function render_metabox_devices_betriebsanweisung () {
+		require( plugin_dir_path( MS_DM_FILE ) . 'src/partials/metabox-devices-betriebsanweisung.php' );
+	}
+
 	public function add_metaboxes() {
 
 		add_meta_box(
@@ -291,6 +295,15 @@ class MS_Devices {
 			'items',
 			'normal',
 			'default'
+		);
+
+		add_meta_box(
+			'devices_metabox_betriebsanweisung',
+			'Betriebsanweisung',
+			array( $this, 'render_metabox_devices_betriebsanweisung' ),
+			'devices',
+			'normal',
+			'high'
 		);
 
 		add_meta_box(
@@ -330,6 +343,11 @@ class MS_Devices {
 			$betriebsanweisung_attachment_id = $_POST["betriebsanweisung_attachment_id"];
 			update_post_meta($pid, "betriebsanweisung_attachment_id", $betriebsanweisung_attachment_id);
 		}
+		if(isset($_POST["betriebsanweisung_created_date"])) {
+			$betriebsanweisung_created_date = $_POST["betriebsanweisung_created_date"];
+			update_post_meta($pid, "betriebsanweisung_created_date", $betriebsanweisung_created_date);
+		}
+
 
 		if(isset($_POST["datenblatt_attachment_id"])) {
 			$datenblatt_attachment_id = $_POST["datenblatt_attachment_id"];
@@ -341,7 +359,4 @@ class MS_Devices {
 			update_post_meta($pid, "bedienungsanleitung_attachment_id", $bedienungsanleitung_attachment_id);
 		}
 	}
-
-
-	
 }

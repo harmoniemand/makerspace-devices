@@ -34,9 +34,26 @@ if ( ! class_exists( 'MS_Device_Management_Logger' ) ) {
             if ($post && get_post_type($post) == 'devices') {
                 if ($column_name == 'betriebsanweisung_attachment_id') {
                     $betriebsanweisung_attachment_id = get_post_meta($post->ID, 'betriebsanweisung_attachment_id', true);
-                    echo '<div><a href="/wp-admin/upload.php?item=' . $betriebsanweisung_attachment_id . '">';
-                    if($betriebsanweisung_attachment_id != NULL) { echo  get_the_title( $betriebsanweisung_attachment_id ); }
-                    echo "</a></div>";
+
+                    if ($betriebsanweisung_attachment_id && $betriebsanweisung_attachment_id != "" ) {
+                        echo '<div>';
+                        echo '<a href="/wp-admin/upload.php?item=' . $betriebsanweisung_attachment_id . '">';
+                        if($betriebsanweisung_attachment_id != NULL) { echo  get_the_title( $betriebsanweisung_attachment_id ); }
+                        echo '</a>';
+                    } else {
+                        echo '<span class="text-warning">Keine BA hinterlegt</span>';
+                    }
+
+                    echo '<br />';
+
+                    $betriebsanweisung_created_date = get_post_meta($post->ID, 'betriebsanweisung_created_date', true);
+                    if($betriebsanweisung_created_date) {
+                        echo 'Erstellt am: ';
+                        echo date_i18n( get_option( 'date_format' ), strtotime( $betriebsanweisung_created_date ) );
+                        echo '</div>';
+                    } else {
+                        echo '<div class="text-warning">BA-Datum fehlt</div>';
+                    }
                 }
 
                 if($column_name == 'datenblatt_attachment_id') {
