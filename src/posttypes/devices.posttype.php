@@ -85,8 +85,9 @@ if ( ! class_exists( 'MS_Device_Management_Logger' ) ) {
                 'public'      => true,
                 'has_archive' => true,
                 'menu_icon'		  => plugin_dir_url( MS_DM_FILE ) . '/src/menu-icon.png',
-                'supports'    => array( 'title', 'editor', 'author', 'thumbnail'/*, 'excerpt', 'comments', 'custom-fields', 'revisions'*/ ),
+                'supports'    => array( 'title', 'editor', 'author', 'thumbnail', 'custom-fields'/*, 'excerpt', 'comments', 'custom-fields', 'revisions'*/ ),
                 'taxonomies'  => array( /*'category', */'post_tag', 'locations' ),
+                'capabilities' => array( 'publish_posts' )
             );
 
             register_post_type( 'devices', $args );
