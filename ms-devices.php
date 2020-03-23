@@ -30,8 +30,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'MS_DM_FILE', __FILE__ );
-define( 'MS_DM_DIR', __DIR__ );
+define( 'MS_DEVICES_FILE', __FILE__ );
+define( 'MS_DEVICES_DIR', __DIR__ );
 
 
 // the main plugin class

@@ -5,8 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-require_once MS_DM_DIR . '/src/includes/class-logger.php';
-
 function remove_footer_admin () {
 	echo '';
 	}
@@ -40,54 +38,21 @@ if ( ! class_exists( 'MS_Devices_Main' ) ) {
 
 
 		function __construct() {
+			add_action('admin_enqueue_scripts', array($this, 'load_styles') );
 
-            require plugin_dir_path( __FILE__ ) . 'includes/class-ms-devices.php';
-
-			$plugin = new MS_DEVICES();
-			$plugin->run();
+            require_once plugin_dir_path( __FILE__ ) . '/PostTypes/Devices/devices.posttype.php';
+            $devicePosttype = new DevicesPosttype();
+            $devicePosttype->register();
 		}
 
+		public function load_styles() {
+            // wp_enqueue_style('boot_css', plugins_url('assets/style.css',__FILE__ ));
+            // wp_enqueue_script('jquery_datatables', plugins_url('assets/js/jquery.dataTables.min.js' ) );
+        }
 
-		private static function get_location_makerspace($name, $room) {
-			return array(
-					'post_title'  => __( $name ),
-					'post_status' => 'publish',
-					'post_author' => $current_user->ID,
-					'post_type'   => 'locations',
-					'meta_input'  => array(
-						'room_number'	=> $room,
-					)
-				);
-		}
-		private static function get_location_sfz($name, $room) {
-			return array(
-					'post_title'  	=> __( $name ),
-					'post_status' 	=> 'publish',
-					'post_author' 	=> $current_user->ID,
-					'post_type'   	=> 'locations',
-					'meta_input'  	=> array(
-						'opening_time_monday'		=> '15:00 - 19:00',
-						'opening_time_tuesday'		=> '15:00 - 19:00',
-						'opening_time_wednesday'	=> '15:00 - 19:00',
-						'opening_time_thursday'		=> '15:00 - 19:00',
-						'opening_time_friday'		=> '15:00 - 19:00',
-						'opening_time_saturday'		=> '15:00 - 19:00',
-						'opening_time_sunday'		=> '15:00 - 19:00',
+		public static function activate() { }
 
-						'room_number'				=> $room,
-					)
-				);
-		}
-
-
-		public static function activate() {
-
-			
-		}
-
-		public static function deactivate( $network_deactivating ) {
-
-		}
+		public static function deactivate( $network_deactivating ) { }
     }
 
 }
