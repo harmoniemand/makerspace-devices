@@ -1,2 +1,6 @@
 
 ms-dm\.log
+
+node_modules/
+
+package-lock.json
