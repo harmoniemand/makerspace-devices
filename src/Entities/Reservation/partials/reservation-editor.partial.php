@@ -86,8 +86,6 @@ if (isset($rid)) {
 
 // print_r($rid);
 
-$term_maker_space = get_term_by('slug', 'maker-space');
-
 function get_terms_with_childs($term_id)
 {
     $terms = get_terms(array(
@@ -109,7 +107,19 @@ function get_terms_with_childs($term_id)
     return $terms;
 };
 
-$labs = get_terms_with_childs(174);
+$terms_no_parents = get_terms(array(
+    'taxonomy' => 'ms_devices_workshop',
+    'hide_empty' => false,
+));
+
+$labs = array();
+
+foreach($terms_no_parents as $tnp) {
+    if ($tnp->slug == "maker-space") {
+        $labs = get_terms_with_childs($tnp->term_id);
+    }
+}
+
 
 // print_r(wp_get_current_user());
 
@@ -125,7 +135,7 @@ $labs = get_terms_with_childs(174);
     </div>
 <?php endif; ?>
 
-<form method="POST" action="?page=reservations-new&rid=<?php echo $rid ?>">
+<form method="POST" action="?page=reservations-editor&rid=<?php echo $rid ?>">
 
     <?php wp_nonce_field(basename(__FILE__), 'mse_device_workshop_nonce'); ?>
 
