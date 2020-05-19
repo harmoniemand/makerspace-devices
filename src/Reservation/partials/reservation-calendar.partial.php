@@ -1,10 +1,10 @@
 <?php
 global $wpdb;
 
+$cal_entries = array();
+
 $today = new DateTime();
-
 $date = new DateTime();
-
 $total_offset = 0;
 
 if (isset($_GET["month"])) {
@@ -59,15 +59,67 @@ $daysPreviousMonth = array_reverse($daysPreviousMonth);
 
 
 $sql_reservations = "SELECT * FROM makerspace_ms_devices_workshop_reservations WHERE mse_device_from > %d and mse_device_to < %d";
-
 $reservations = $wpdb->get_results($wpdb->prepare(
     $sql_reservations,
     $firstDayInMonth->getTimestamp(),
     $lastDayInMonth->getTimestamp()
 ));
 
+foreach ($reservations as $reservation) {
+    $date_from = new DateTime();
+    $date_from->setTimestamp($reservation->mse_device_from);
+
+    $date_to = new DateTime();
+    $date_to->setTimestamp($reservation->mse_device_to);
+
+    $grid_row = round(($date_from->format('j') + ($firstDayInMonth->format("w") - 1)) / 7) + 2;
+    $duration = ceil(($reservation->mse_device_to - $reservation->mse_device_from) / 60 / 60 / 24);
+
+    $entry = (object) array(
+        "title" => $reservation->mse_device_project_title . " " . $date_from->format('j'),
+        "permalink" => "?page=reservations-editor&rid=" . $reservation->mse_device_workshop_registration_id,
+        "start" => $date_to,
+        "end" => $date_from,
+        "grid_row" => $grid_row,
+        "duration" => $duration,
+        "style" => "reservation-lab"
+    );
+
+    array_push($cal_entries, $entry);
+}
+
+
+
+
+$workshops_posts = get_posts(array(
+    'post_type'         => 'workshop',
+    'posts_per_page'    =>  -1,
+    'order'              => 'ASC',
+    'orderby'   => 'order_clause',
+
+));
+
+foreach ($workshops_posts as $wp) {
+    $start_date = get_post_meta($wp->ID, 'workshop_start', true);
+    $end_date = get_post_meta($wp->ID, 'workshop_end', true);
+
+    if ($start_date->format("Y-m-d") > $firstDayInMonth->format("Y-m-d") && $end_date->format("Y-m-d") < $lastDayInMonth->format("Y-m-d")) {
+        $entry = (object) array(
+            "title" => $wp->post_title . " " . $start_date->format('j'),
+            "permalink" => "",
+            "start" => $start_date,
+            "end" => $end_date,
+            "grid_row" => round(($start_date->format('j') + ($firstDayInMonth->format("w") - 1)) / 7) + 2,
+            "duration" => ceil(($end_date->getTimestamp() - $start_date->getTimestamp()) / 60 / 60 / 24),
+            "style" => "reservation-workshop"
+        );
+
+        array_push($cal_entries, $entry);
+    }
+}
 
 ?>
+
 
 
 <div class="row mt-3" style="max-width: 100%;">
@@ -131,21 +183,21 @@ $reservations = $wpdb->get_results($wpdb->prepare(
                 <div class="day day--disabled">1</div>
                 <div class="day day--disabled">2</div>
 
-                <?php foreach ($reservations as $r) : ?>
 
-                    <?php
-                    $date_from = new DateTime();
-                    $date_from->setTimestamp($r->mse_device_from);
+                <?php foreach ($cal_entries as $entry) : ?>
+                    <section onclick="" class="task <?php echo $entry->style ?>" style="grid-column: <?php echo $entry->start->format("w") ?> / span <?php echo $entry->duration ?>; grid-row: <?php echo $entry->grid_row ?>;">
+                        <a href="<?php echo $entry->permalink ?>"><?php echo $entry->title ?></a>
 
-                    $grid_row = round(($date_from->format('j') + ($firstDayInMonth->format("w") - 1)) / 7) + 2;
-                    $duration = ceil(($r->mse_device_to - $r->mse_device_from) / 60 / 60 / 24);
-                    ?>
-
-                    <section class="task" style="grid-column: <?php echo $date_from->format("w") ?> / span <?php echo $duration ?>; grid-row: <?php echo $grid_row ?>;  border-left-color: rgb(0, 150, 0); background: rgb(108, 240, 98);">
-                        <a href="?page=reservations-editor&rid=<?php echo $r->mse_device_workshop_registration_id ?>" style="color: rgb(0,150, 0);"><?php echo $r->mse_device_project_title ?></a>
+                        <div class="task__detail">
+                            <p>Start: <?php echo $entry->start->format("Y-m-d") ?></p>
+                            <p><?php echo $entry->start->format("H:i") ?></p>
+                            <p>grid_row: <?php echo $entry->grid_row ?></p>
+                            <p>duration: <?php echo $entry->duration ?></p>
+                            <p>column: <?php echo $entry->start->format("w") ?></p>
+                        </div>
                     </section>
-
                 <?php endforeach; ?>
+
             </div>
         </div>
 

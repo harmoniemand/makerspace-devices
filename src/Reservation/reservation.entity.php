@@ -43,7 +43,8 @@ class ReservationEntity
     {
         require dirname(__FILE__) . '/partials/reservation-editor.partial.php';
     }
-    public function renderSubmenuReservationCalendar() {
+    public function renderSubmenuReservationCalendar()
+    {
         require dirname(__FILE__) . '/partials/reservation-calendar.partial.php';
     }
 
@@ -89,8 +90,16 @@ class ReservationEntity
         );
     }
 
+    public function load_styles()
+    {
+        wp_enqueue_style('css-custom-entity-reservation', plugins_url('reservation.styles.css', __FILE__));
+    }
+
     public function register()
     {
+
+        add_action('admin_enqueue_scripts', array($this, 'load_styles'));
+
         add_action('admin_menu', array($this, "registerAdminMenu"));
     }
 

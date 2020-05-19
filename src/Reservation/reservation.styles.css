@@ -1,0 +1,22 @@
+.reservation-lab {
+    border-left-color: rgb(0, 150, 0);
+    background: rgb(108, 240, 98);
+}
+.reservation-lab a {
+    color: rgb(0, 150, 0);
+}
+
+.reservation-workshop {
+    border-left-color: rgb(235, 189, 52);
+    background: rgb(255, 238, 186);
+}
+.reservation-workshop a {
+    color: rgb(235, 189, 52);
+}
+
+.task .task__detail {
+    display: none;
+}
+.task:hover .task__detail {
+    display: block !important;
+}
