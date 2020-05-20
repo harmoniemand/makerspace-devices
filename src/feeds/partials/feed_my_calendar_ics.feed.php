@@ -65,7 +65,7 @@ if ($showAllWorkshops) :
             "dtstamp" => (new DateTime())->format(DT_FORMAT),
             "dtstart" => get_post_meta($workshop->ID, 'workshop_start', true)->format(DT_FORMAT),
             "dtend" => get_post_meta($workshop->ID, 'workshop_end', true)->format(DT_FORMAT),
-            "uid" => get_site_url() . '/workshop/' . $workshop->slug,
+            "uid" => get_permalink($workshop->ID),
             "created" => get_the_date(DT_FORMAT, $event->ID),
             "describtion" => htmlspecialchars_decode(get_the_excerpt($event->ID)),
             "summary" => "Workshop " . htmlspecialchars_decode(get_the_title($event->ID)),
