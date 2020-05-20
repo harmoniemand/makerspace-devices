@@ -65,7 +65,7 @@ if ($showAllWorkshops) :
             "dtstamp" => (new DateTime())->format(DT_FORMAT),
             "dtstart" => get_post_meta($workshop->ID, 'workshop_start', true)->format(DT_FORMAT),
             "dtend" => get_post_meta($workshop->ID, 'workshop_end', true)->format(DT_FORMAT),
-            "uid" => get_permalink($workshop->ID),
+            "uid" => get_site_url() . get_permalink($workshop->ID),
             "created" => get_the_date(DT_FORMAT, $event->ID),
             "describtion" => htmlspecialchars_decode(get_the_excerpt($event->ID)),
             "summary" => "Workshop " . htmlspecialchars_decode(get_the_title($event->ID)),
@@ -92,8 +92,9 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 
 <?php foreach ($events as $event) : ?>
-
 BEGIN:VEVENT
+DTSTAMP:<?php echo $event->dtstamp; ?>
+
 DTSTART:<?php echo $event->dtstart;  ?>
 
 DTEND:<?php echo $event->dtend;  ?>
@@ -110,11 +111,9 @@ LAST-MODIFIED:<?php echo $event->last_modified;  ?>
 
 SEQUENCE:0
 STATUS:CONFIRMED
-
 TRANSP:OPAQUE
 LOCATION: Maker Space Experimenta
 END:VEVENT
-
 <?php endforeach; ?>
 
 END:VCALENDAR
