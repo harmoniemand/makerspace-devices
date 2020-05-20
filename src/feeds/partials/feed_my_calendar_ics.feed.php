@@ -93,27 +93,27 @@ METHOD:PUBLISH
 
 <?php foreach ($events as $event) : ?>
 
-    BEGIN:VEVENT
-    DTSTART:<?php echo $event->dtstart;  ?>
+BEGIN:VEVENT
+DTSTART:<?php echo $event->dtstart;  ?>
 
-    DTEND:<?php echo $event->dtend;  ?>
+DTEND:<?php echo $event->dtend;  ?>
 
-    UID:<?php echo $event->uid;  ?>
+UID:<?php echo $event->uid;  ?>
 
-    CREATED:<?php echo $event->created;  ?>
+CREATED:<?php echo $event->created;  ?>
 
-    DESCRIPTION:<?php echo $event->description;  ?>
+DESCRIPTION:<?php echo $event->description;  ?>
 
-    SUMMARY:<?php echo $event->summary;  ?>
+SUMMARY:<?php echo $event->summary;  ?>
 
-    LAST-MODIFIED:<?php echo $event->last_modified;  ?>
+LAST-MODIFIED:<?php echo $event->last_modified;  ?>
 
-    SEQUENCE:0
-    STATUS:CONFIRMED
+SEQUENCE:0
+STATUS:CONFIRMED
 
-    TRANSP:OPAQUE
-    LOCATION: Maker Space Experimenta
-    END:VEVENT
+TRANSP:OPAQUE
+LOCATION: Maker Space Experimenta
+END:VEVENT
 
 <?php endforeach; ?>
 
