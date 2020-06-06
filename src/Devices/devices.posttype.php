@@ -111,7 +111,7 @@ class DevicesPosttype
             'labels'      => $labels,
             'public'      => true,
             'has_archive' => true,
-            'menu_icon'   => plugin_dir_url(MS_DEVICES_FILE) . '/src/menu-icon.png',
+            'menu_icon'   => plugin_dir_url(MSM_FILE) . '/src/menu-icon.png',
             'show_in_rest' => true,
             'supports'    => array('title', 'editor', 'author', 'thumbnail', 'custom-fields', 'excerpt',/* 'comments', 'custom-fields', 'revisions'*/),
             'taxonomies'  => array('ms_devices_workshop', 'category', 'post_tag'),

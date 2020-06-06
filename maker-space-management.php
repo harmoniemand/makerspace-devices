@@ -13,7 +13,7 @@
  * @package           ms_devices
  *
  * @wordpress-plugin
- * Plugin Name:       Maker Space Devices
+ * Plugin Name:       Maker Space Management
  * Plugin URI:        https://makerspace.experimenta.science/ms-device-management
  * Description:       Plugin to manage and display devices and device bookings for a maker space
  * Version:           1.0.0
@@ -30,8 +30,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'MS_DEVICES_FILE', __FILE__ );
-define( 'MS_DEVICES_DIR', __DIR__ );
+define( 'MSM_FILE', __FILE__ );
+define( 'MSM_DIR', __DIR__ );
 
 
 // the main plugin class

@@ -55,9 +55,9 @@ if (!class_exists('MS_Devices_Main')) {
 
 			// Load Submodules
 
-			require_once plugin_dir_path(__FILE__) . '/MyAccount/my-account.main.php';
-			$myAccountMain = new MyAccountMain();
-			$myAccountMain->register();
+			// require_once plugin_dir_path(__FILE__) . '/MyAccount/my-account.main.php';
+			// $myAccountMain = new MyAccountMain();
+			// $myAccountMain->register();
 
 			require_once plugin_dir_path(__FILE__) . '/Devices/devices.posttype.php';
 			$devicePosttype = new DevicesPosttype();
@@ -66,6 +66,10 @@ if (!class_exists('MS_Devices_Main')) {
 			require_once dirname(__FILE__) . '/Reservation/reservation.entity.php';
 			$reservation = ReservationEntity::instance();
 			$reservation->register();
+
+			require_once dirname(__FILE__) . '/Workshops/workshop.posttype.php';
+			$workshopPostType = WorkshopPostType::instance();
+			$workshopPostType->register();
 		}
 
 		public function load_styles()

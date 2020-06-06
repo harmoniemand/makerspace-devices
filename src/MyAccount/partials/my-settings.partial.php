@@ -74,7 +74,7 @@ $my_calendar_include_my_reservations = get_user_meta($uid, 'my_calendar_include_
 
     <div class="row mt-3" style="max-width: 100%; margin-top: 0 !important;">
         <div class="col">
-            <div class="card" style="border-radius: 0; padding: 8px 12px;">
+            <div class="card wp-settings" style="border-radius: 0; padding: 8px 12px;">
                 <div class="card-body">
                     <h5 class="card-title"><?php echo __('Kalendereinstellungen') ?></h5>
 

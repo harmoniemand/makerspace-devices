@@ -42,6 +42,9 @@ class MyAccountMain
     public function renderSubmenuMySettings() {
         require dirname(__FILE__) . '/partials/my-settings.partial.php';
     }
+    public function renderSubmenuDeviceLicenses() {
+        require dirname(__FILE__) . '/partials/my-device-licenses.php';
+    }
 
     public function registerAdminMenu()
     {
@@ -61,6 +64,17 @@ class MyAccountMain
             2
         );
 
+        $subpage_title_device_license = __('Sicherheitsunterweisungen');
+        $submenu_slug_device_license  = 'my_device_licenses';
+        add_submenu_page(
+            $menu_slug,
+            $subpage_title_device_license,
+            $subpage_title_device_license,
+            $capability,
+            $submenu_slug_device_license,
+            array($this, "renderSubmenuDeviceLicenses")
+        );
+
         $subpage_title = __('Mein Einstellungen');
         $submenu_title = __('Mein Einstellungen');
         $submenu_slug = 'my-settings';
@@ -77,14 +91,12 @@ class MyAccountMain
 
     public function load_styles()
     {
-        wp_enqueue_style('css-custom-entity-reservation', plugins_url('me.styles.css', __FILE__));
+        wp_enqueue_style('css-custom-my-account', plugins_url('me.styles.css', __FILE__));
     }
 
     public function register()
     {
-
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
-
         add_action('admin_menu', array($this, "registerAdminMenu"));
     }
 

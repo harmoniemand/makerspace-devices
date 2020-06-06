@@ -152,7 +152,7 @@ foreach($terms_no_parents as $tnp) {
 
     <div class="row mt-3" style="max-width: 100%; margin-top: 0 !important;">
         <div class="col">
-            <div class="card" style="border-radius: 0; padding: 8px 12px;">
+            <div class="card wp-settings" style="border-radius: 0; padding: 8px 12px;">
                 <div class="card-body">
 
                     <div class="form-group row">
