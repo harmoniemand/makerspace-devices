@@ -41,6 +41,7 @@
             $ldap['admin'] =        get_option("makerspace_ldap_admin");
             $ldap['admin_pass'] =   get_option("makerspace_ldap_admin_pass");
             $ldap['user_ou'] =      get_option("makerspace_ldap_user_ou");
+            $ldap['gidNumberVisitors'] =      get_option("makerspace_ldap_gid_number_visitors");
 
 
             // echo "<pre>";
@@ -78,7 +79,7 @@
 
 
                         $info["homeDirectory"] = "/home/users/" . $mse_registration_username;
-                        $info["gidNumber"] = "500";
+                        $info["gidNumber"] = $ldap['gidNumberVisitors'];
 
                         $info["objectClass"][0] = "posixAccount";
                         $info["objectClass"][1] = "inetOrgPerson";

@@ -6,6 +6,7 @@ if (isset($_POST['makerspace_settings_nonce'])) {
     update_option('makerspace_ldap_admin', $_POST['makerspace_ldap_admin']);
     update_option('makerspace_ldap_admin_pass', $_POST['makerspace_ldap_admin_pass']);
     update_option('makerspace_ldap_user_ou', $_POST['makerspace_ldap_user_ou']);
+    update_option('makerspace_ldap_gid_number_visitors', $_POST['makerspace_ldap_gid_number_visitors']);
 }
 
 
@@ -14,6 +15,7 @@ $makerspace_ldap_port = get_option("makerspace_ldap_port");
 $makerspace_ldap_admin = get_option("makerspace_ldap_admin");
 $makerspace_ldap_admin_pass = get_option("makerspace_ldap_admin_pass");
 $makerspace_ldap_user_ou = get_option("makerspace_ldap_user_ou");
+$makerspace_ldap_gid_number_visitors = get_option("makerspace_ldap_gid_number_visitors");
 
 
 ?>
@@ -78,6 +80,13 @@ $makerspace_ldap_user_ou = get_option("makerspace_ldap_user_ou");
                         <label for="makerspace_ldap_user_ou" class="col-sm-2 col-form-label">User OU</label>
                         <div class="col-sm-10">
                             <input type="text" name="makerspace_ldap_user_ou" id="makerspace_ldap_user_ou" class="form-control-plaintext" value="<?php echo $makerspace_ldap_user_ou ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="makerspace_ldap_gid_number_visitors" class="col-sm-2 col-form-label">Visitor gid number</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="makerspace_ldap_gid_number_visitors" id="makerspace_ldap_gid_number_visitors" class="form-control-plaintext" value="<?php echo $makerspace_ldap_gid_number_visitors ?>">
                         </div>
                     </div>
 
