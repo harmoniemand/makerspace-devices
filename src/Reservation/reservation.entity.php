@@ -90,6 +90,20 @@ class ReservationEntity
         );
     }
 
+    public function shortcode_table($atts)
+    {
+        ob_start();
+        require dirname(__FILE__) . '/partials/shortcode-reservation-table.partial.php';
+        $ReturnString = ob_get_contents();
+        ob_end_clean();
+        return $ReturnString;
+    }
+
+    public function register_shortcodes()
+    {
+        add_shortcode('registrations_table', array($this, "shortcode_table"));
+    }
+
     public function load_styles()
     {
         wp_enqueue_style('css-custom-entity-reservation', plugins_url('reservation.styles.css', __FILE__));
@@ -97,10 +111,9 @@ class ReservationEntity
 
     public function register()
     {
-
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
-
         add_action('admin_menu', array($this, "registerAdminMenu"));
+        add_action('init', array($this, 'register_Shortcodes'));
     }
 
     public function activate()

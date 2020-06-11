@@ -55,6 +55,14 @@ if (!class_exists('MS_Devices_Main')) {
 
 			// Load Submodules
 
+			require_once dirname(__FILE__) . '/Settings/settings.entity.php';
+			$settingsEntity = SettingsEntity::instance();
+			$settingsEntity->register();
+			
+			require_once dirname(__FILE__) . '/Registration/registration.entity.php';
+			$registrationEntity = RegistrationEntity::instance();
+			$registrationEntity->register();
+
 			// require_once plugin_dir_path(__FILE__) . '/MyAccount/my-account.main.php';
 			// $myAccountMain = new MyAccountMain();
 			// $myAccountMain->register();
