@@ -12,7 +12,7 @@
         <form method="post" action="<?php echo get_permalink(); ?>">
             <?php wp_nonce_field(basename(__FILE__), 'makerspace_login_nonce'); ?>
 
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered" style="height: 100vh;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Anmeldung</h5>
