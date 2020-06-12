@@ -3,7 +3,7 @@
 global $wpdb;
 global $atts;
 
-print_r($atts);
+$visitor_limit = get_option("makerspace_visitor_limit");
 
 $weekdays = array();
 $today = new DateTime();
@@ -24,7 +24,8 @@ for ($i = 0; $i < 5; $i++) {
 }
 
 
-$sql_reservations = "SELECT * FROM makerspace_ms_devices_workshop_reservations WHERE mse_device_from > %d AND mse_device_to < %d";
+// $sql_reservations = "SELECT * FROM makerspace_ms_devices_workshop_reservations WHERE mse_device_from > %d AND mse_device_to < %d";
+$sql_reservations = "SELECT * FROM makerspace_advance_registrations WHERE mar_from > %d AND mar_to < %d AND mar_deleted < 1";
 
 foreach ($weekdays as $day) {
 
@@ -42,17 +43,21 @@ foreach ($weekdays as $day) {
         $hour_timestamp_end = (clone $day->date->setTime($hour, 59, 59))->getTimestamp();
 
         foreach ($reservations as $r) {
-            if ($r->mse_device_from <= $hour_timestamp_begin && $r->mse_device_to >= $hour_timestamp_end) {
+            if ($r->mar_from <= $hour_timestamp_begin && $r->mar_to >= $hour_timestamp_end) {
                 $hour_count++;
             }
         }
+
+        $sql_rvp = "SELECT * FROM makerspace_advance_registrations WHERE mar_from = %d AND mar_user_id = %d";
+        $rvp = $wpdb->get_row($wpdb->prepare($sql_rvp, $hour_timestamp_begin, get_current_user_id()));
 
         $h = (object) array(
             "hour" => $hour,
             "count" => $hour_count,
             "start" => $hour_timestamp_begin,
             "end" => $hour_timestamp_end,
-            "color" => $hour_count < 18 ? "rgb(161, 198, 57)" :  "#e40033"
+            "color" => $hour_count < $visitor_limit ? "rgb(161, 198, 57)" :  "#e40033",
+            "reserved" => $rvp == null || $rvp->mar_deleted > 0 ? false : true
         );
 
         array_push($day->hours, $h);
@@ -72,7 +77,7 @@ foreach ($weekdays as $day) {
                     <?php foreach ($day->hours as $h) : ?>
                         <a href="/wp-admin/admin.php?page=reservations" style="text-decoration: none !important; color: black !important; background-color: <?php echo $h->color ?>;" class="d-flex justify-content-between p-1">
                             <span><?php echo $h->hour ?>:00</span>
-                            <span><?php echo 18 - $h->count ?> freie Plätze</span><br />
+                            <span><?php echo $visitor_limit - $h->count ?> freie Plätze</span><br />
                         </a>
                     <?php endforeach; ?>
 
