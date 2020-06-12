@@ -9,6 +9,11 @@ print_r($atts);
 
 $weekdays = array();
 $today = new DateTime();
+$offset = 0;
+if (isset($_GET["offset"])) {
+    $offset = $_GET["offset"];
+}
+$today = $today->modify($offset . " week");
 $week_start = clone $today->modify('Monday this week');
 
 for ($i = 0; $i < 5; $i++) {
@@ -115,6 +120,15 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
                 <div class="card-body">
 
                     <div class="row">
+
+                        <a href="?page=reservations&offset=<?php echo ($offset - 1) ?>" class="w-100 d-md-none d-flex flex-md-column justify-content-center">
+                            <clr-icon shape="angle" size="36" dir="up"></clr-icon>
+                        </a>
+
+                        <a href="?page=reservations&offset=<?php echo ($offset - 1) ?>" class="d-none d-md-flex flex-md-column justify-content-center">
+                            <clr-icon shape="angle" size="36" dir="left" class=""></clr-icon>
+                        </a>
+
                         <?php foreach ($weekdays as $day) : ?>
                             <div class="col-12 col-md-6 col-lg mt-5 mt-md-0">
                                 <h3><?php echo dayToString($day->date->format('w')); ?></h3>
@@ -150,6 +164,14 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
                                 </div>
                             </div>
                         <?php endforeach; ?>
+
+                        <a href="?page=reservations&offset=<?php echo ($offset + 1) ?>" class="w-100 d-md-none d-flex flex-md-column justify-content-center">
+                            <clr-icon shape="angle" size="36" dir="down"></clr-icon>
+                        </a>
+
+                        <a href="?page=reservations&offset=<?php echo ($offset + 1) ?>" class="d-none d-md-flex flex-md-column justify-content-center">
+                            <clr-icon shape="angle" size="36" dir="right" class=""></clr-icon>
+                        </a>
                     </div>
 
                 </div>

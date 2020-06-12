@@ -7,6 +7,13 @@ $visitor_limit = get_option("makerspace_visitor_limit");
 
 $weekdays = array();
 $today = new DateTime();
+$offset = 0;
+
+if (isset($_GET["offset"])) {
+    $offset = $_GET["offset"];
+}
+$today = $today->modify($offset . " week");
+
 $week_start = clone $today->modify('Monday this week');
 
 for ($i = 0; $i < 5; $i++) {
@@ -68,8 +75,17 @@ foreach ($weekdays as $day) {
 
 <div class="container mb-5">
     <div class="row">
+
+        <a href="?offset=<?php echo ($offset - 1) ?>" class="w-100 d-md-none d-flex flex-md-column justify-content-center">
+            <clr-icon shape="angle" size="36" dir="up" ></clr-icon>
+        </a>
+
+        <a href="?offset=<?php echo ($offset - 1) ?>" class="d-none d-md-flex flex-md-column justify-content-center">
+            <clr-icon shape="angle" size="36" dir="left" class=""></clr-icon>
+        </a>
+
         <?php foreach ($weekdays as $day) : ?>
-            <div class="col-12 col-md-6 col-lg border">
+            <div class="col-11 col-md-6 col-lg border">
                 <h3><?php echo dayToString($day->date->format('w')); ?></h3>
                 <h6><?php echo $day->date->format('d.m.'); ?></h6>
                 <div class="">
@@ -84,6 +100,14 @@ foreach ($weekdays as $day) {
                 </div>
             </div>
         <?php endforeach; ?>
+        
+        <a href="?offset=<?php echo ($offset + 1) ?>" class="w-100 d-md-none d-flex flex-md-column justify-content-center">
+            <clr-icon shape="angle" size="36" dir="down" ></clr-icon>
+        </a>
+
+        <a href="?offset=<?php echo ($offset + 1) ?>" class="d-none d-md-flex flex-md-column justify-content-center">
+            <clr-icon shape="angle" size="36" dir="right" class=""></clr-icon>
+        </a>
     </div>
 </div>
 
