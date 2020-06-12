@@ -79,24 +79,24 @@ class RegistrationEntity
                 // print_r($user);
             } else {
                 $userID = $user->ID;
-    
+
                 wp_set_current_user($userID, $credentials['user_login']);
                 wp_set_auth_cookie($userID, true, false);
                 do_action('wp_login', $credentials['user_login']);
-    
+
                 if (is_user_logged_in()) {
                     wp_redirect("/wp-admin");
                     exit();
                 }
             }
-
         }
     }
-    
+
     public function register()
     {
         add_action('init', array($this, 'register_Shortcodes'));
         add_action('init', array($this, 'custom_login'));
+
     }
 
     public function activate()

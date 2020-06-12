@@ -52,9 +52,9 @@ class ReservationEntity
     {
         $page_title = 'Reservierungen';
         $menu_title = 'Reservierungen';
-        $capability = 'edit_others_posts';
+        $capability = 'read';
         $menu_slug  = 'reservations';
-        $function   = array($this, "renderMenuReservationList");
+        $function   = array($this, "renderSubmenuReservationEditor");
         $icon_url   = 'dashicons-media-code';
         add_menu_page(
             $page_title,
@@ -72,7 +72,7 @@ class ReservationEntity
             $menu_slug,
             $subpage_title,
             $submenu_title,
-            $capability,
+            "edit_others_posts",
             $submenu_slug,
             array($this, "renderSubmenuReservationCalendar")
         );
@@ -84,9 +84,9 @@ class ReservationEntity
             $menu_slug,
             $subpage_title,
             $submenu_title,
-            $capability,
+            "edit_others_posts",
             $submenu_slug,
-            array($this, "renderSubmenuReservationEditor")
+            array($this, "renderMenuReservationList")
         );
     }
 
@@ -104,6 +104,20 @@ class ReservationEntity
         add_shortcode('registrations_table', array($this, "shortcode_table"));
     }
 
+    // Registrieren von Widgets
+    public function render_dashboard_widget_register_for_visit() {
+        require dirname(__FILE__) . '/partials/widget-register.partial.php';
+    }
+
+    public function register_dashboard_widgets()
+    {
+        wp_add_dashboard_widget(
+            'ms-register',         // Widget slug.
+            'Für den Besuch anmelden',         // Title.
+            array($this, 'render_dashboard_widget_register_for_visit') // Display function.
+        );
+    }
+
     public function load_styles()
     {
         wp_enqueue_style('css-custom-entity-reservation', plugins_url('reservation.styles.css', __FILE__));
@@ -114,6 +128,7 @@ class ReservationEntity
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));
         add_action('init', array($this, 'register_Shortcodes'));
+        add_action( 'wp_dashboard_setup', array($this, 'register_dashboard_widgets') );
     }
 
     public function activate()
@@ -121,17 +136,14 @@ class ReservationEntity
         global $wpdb;
 
         $sql = "
-                CREATE TABLE IF NOT EXISTS makerspace_ms_devices_workshop_reservations (
-                mse_device_workshop_registration_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                mse_device_workshop_taxonomie_id INT NOT NULL,
-                mse_device_workshop_registration_email VARCHAR(255) NOT NULL,
-                mse_device_workshop_registration_firstname VARCHAR(255) NOT NULL,
-                mse_device_workshop_registration_lastname VARCHAR(255) NOT NULL,
-                mse_device_from INT NOT NULL,
-                mse_device_to INT NOT NULL,
-                mse_device_approved INT,
-                mse_device_deleted INT,
-                mse_device_project_title VARCHAR(255),
+                CREATE TABLE IF NOT EXISTS makerspace_advance_registrations (
+                mar_registration_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                mar_user_id  bigint(20) NOT NULL,
+                mar_from INT NOT NULL,
+                mar_to INT NOT NULL,
+                mar_approved_by INT,
+                mar_deleted INT,
+                mar_term_id bigint(20),
                 mse_device_message TEXT
                 )
             ";

@@ -7,6 +7,8 @@ if (isset($_POST['makerspace_settings_nonce'])) {
     update_option('makerspace_ldap_admin_pass', $_POST['makerspace_ldap_admin_pass']);
     update_option('makerspace_ldap_user_ou', $_POST['makerspace_ldap_user_ou']);
     update_option('makerspace_ldap_gid_number_visitors', $_POST['makerspace_ldap_gid_number_visitors']);
+
+    update_option('makerspace_visitor_limit', $_POST['makerspace_visitor_limit']);
 }
 
 
@@ -16,6 +18,8 @@ $makerspace_ldap_admin = get_option("makerspace_ldap_admin");
 $makerspace_ldap_admin_pass = get_option("makerspace_ldap_admin_pass");
 $makerspace_ldap_user_ou = get_option("makerspace_ldap_user_ou");
 $makerspace_ldap_gid_number_visitors = get_option("makerspace_ldap_gid_number_visitors");
+
+$makerspace_visitor_limit = get_option("makerspace_visitor_limit");
 
 
 ?>
@@ -45,6 +49,18 @@ $makerspace_ldap_gid_number_visitors = get_option("makerspace_ldap_gid_number_vi
 
     <div class="row mt-3" style="max-width: 100%; margin-top: 0 !important;">
         <div class="col">
+            <div class="card wp-settings" style="border-radius: 0; padding: 8px 12px;">
+                <div class="card-body">
+
+                    <div class="form-group row">
+                        <label for="makerspace_ldap_server" class="col-sm-2 col-form-label">Visitor Limit</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="makerspace_visitor_limit" id="makerspace_visitor_limit" class="form-control-plaintext" value="<?php echo $makerspace_visitor_limit ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card wp-settings" style="border-radius: 0; padding: 8px 12px;">
                 <div class="card-body">
 
