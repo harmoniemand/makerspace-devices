@@ -92,11 +92,23 @@ class RegistrationEntity
         }
     }
 
+
+    public function prevent_wp_login()
+    {
+        global $pagenow;
+        $action = (isset($_GET['action'])) ? $_GET['action'] : '';
+
+        if ($pagenow == 'wp-login.php' && (!$action || ($action && !in_array($action, array('logout', 'lostpassword', 'rp', 'resetpass'))))) {
+            wp_redirect("/login");
+            exit();
+        }
+    }
+
     public function register()
     {
+        add_action('init', array($this, 'prevent_wp_login'));
         add_action('init', array($this, 'register_Shortcodes'));
         add_action('init', array($this, 'custom_login'));
-
     }
 
     public function activate()

@@ -70,10 +70,10 @@ foreach ($weekdays as $day) {
                 <div class="">
 
                     <?php foreach ($day->hours as $h) : ?>
-                        <div style="background-color: <?php echo $h->color ?>;" class="d-flex justify-content-between p-1">
+                        <a href="/wp-admin/admin.php?page=reservations" style="text-decoration: none !important; color: black !important; background-color: <?php echo $h->color ?>;" class="d-flex justify-content-between p-1">
                             <span><?php echo $h->hour ?>:00</span>
                             <span><?php echo 18 - $h->count ?> freie Plätze</span><br />
-                        </div>
+                        </a>
                     <?php endforeach; ?>
 
                 </div>
