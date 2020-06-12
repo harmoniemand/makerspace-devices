@@ -26,7 +26,7 @@ for ($i = 0; $i < 5; $i++) {
 }
 
 
-$sql_reservations = "SELECT * FROM makerspace_advance_registrations WHERE mar_from > %d AND mar_to < %d";
+$sql_reservations = "SELECT * FROM makerspace_advance_registrations WHERE mar_from > %d AND mar_to < %d AND mar_deleted < 1";
 
 foreach ($weekdays as $day) {
 
