@@ -104,7 +104,7 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
     </div>
 <?php endif; ?>
 
-<form method="POST" action="?page=reservations">
+<form method="POST" action="?page=reservations&offset=<?php echo $offset ?>">
 
     <?php wp_nonce_field(basename(__FILE__), 'makerspace_advance_refistration_nonce'); ?>
 
