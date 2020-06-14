@@ -35,17 +35,9 @@ class ReservationEntity
     }
 
 
-    public function renderMenuReservationList()
-    {
-        require dirname(__FILE__) . '/partials/reservation-list.partial.php';
-    }
     public function renderSubmenuReservationEditor()
     {
         require dirname(__FILE__) . '/partials/reservation-editor.partial.php';
-    }
-    public function renderSubmenuReservationCalendar()
-    {
-        require dirname(__FILE__) . '/partials/reservation-calendar.partial.php';
     }
 
     public function registerAdminMenu()
@@ -63,30 +55,6 @@ class ReservationEntity
             $menu_slug,
             $function,
             $icon_url
-        );
-
-        $subpage_title = 'Kalender';
-        $submenu_title = 'Kalender';
-        $submenu_slug = 'reservations-calendar';
-        add_submenu_page(
-            $menu_slug,
-            $subpage_title,
-            $submenu_title,
-            "edit_others_posts",
-            $submenu_slug,
-            array($this, "renderSubmenuReservationCalendar")
-        );
-
-        $subpage_title = 'Neue Reservierung';
-        $submenu_title = 'Neue Reservierung';
-        $submenu_slug = 'reservations-editor';
-        add_submenu_page(
-            $menu_slug,
-            $subpage_title,
-            $submenu_title,
-            "edit_others_posts",
-            $submenu_slug,
-            array($this, "renderMenuReservationList")
         );
     }
 
