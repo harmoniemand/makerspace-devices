@@ -4,6 +4,7 @@ global $wpdb;
 global $atts;
 
 $visitor_limit = get_option("makerspace_visitor_limit");
+$error = "";
 
 print_r($atts);
 
@@ -73,19 +74,27 @@ foreach ($weekdays as $day) {
 if (isset($_POST["makerspace_advance_refistration_nonce"])) {
     foreach ($weekdays as $day) {
         foreach ($day->hours as $hour) {
+            $now = (new DateTime())->getTimestamp();
+
             if ($hour->start == $_POST["slot"]) {
-                $hour->reserved = !$hour->reserved;
 
-                $sql_rvp = "SELECT * FROM makerspace_advance_registrations WHERE mar_from = %d AND mar_user_id = %d";
-                $rvp = $wpdb->get_row($wpdb->prepare($sql_rvp, $hour->start, get_current_user_id()));
-
-                if ($rvp != null) {
-                    $sql_update_rvp = "UPDATE makerspace_advance_registrations set mar_deleted = %d WHERE mar_from = %d AND mar_user_id = %d";
-                    $wpdb->get_results($wpdb->prepare($sql_update_rvp, !$hour->reserved, $hour->start, get_current_user_id()));
+                if ($hour->start < $now) {
+                    $error = __("Das ausgewählte Element liegt in der Vergangenheit.");
                 } else {
-                    $sql_create_rvp = "INSERT INTO makerspace_advance_registrations (mar_deleted, mar_from, mar_to, mar_user_id) VALUES (%d, %d, %d, %d)";
-                    $wpdb->get_results($wpdb->prepare($sql_create_rvp, !$hour->reserved, $hour->start, $hour->end, get_current_user_id()));
+                    $hour->reserved = !$hour->reserved;
+    
+                    $sql_rvp = "SELECT * FROM makerspace_advance_registrations WHERE mar_from = %d AND mar_user_id = %d";
+                    $rvp = $wpdb->get_row($wpdb->prepare($sql_rvp, $hour->start, get_current_user_id()));
+    
+                    if ($rvp != null) {
+                        $sql_update_rvp = "UPDATE makerspace_advance_registrations set mar_deleted = %d WHERE mar_from = %d AND mar_user_id = %d";
+                        $wpdb->get_results($wpdb->prepare($sql_update_rvp, !$hour->reserved, $hour->start, get_current_user_id()));
+                    } else {
+                        $sql_create_rvp = "INSERT INTO makerspace_advance_registrations (mar_deleted, mar_from, mar_to, mar_user_id) VALUES (%d, %d, %d, %d)";
+                        $wpdb->get_results($wpdb->prepare($sql_create_rvp, !$hour->reserved, $hour->start, $hour->end, get_current_user_id()));
+                    }
                 }
+
             }
         }
     }
@@ -94,11 +103,11 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
 
 ?>
 
-<?php if (isset($saved)) : ?>
+<?php if ($error != "") : ?>
     <div class="row mt-3" style="max-width: 100%;">
         <div class="col">
-            <div class="alert alert-success" role="alert" style="padding: 8px 12px; width: 100%;">
-                Reservierung gespeichert
+            <div class="alert alert-danger" role="alert" style="padding: 8px 12px; width: 100%;">
+                <?php echo $error ?>
             </div>
         </div>
     </div>
@@ -145,6 +154,10 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
                                             $button_style = "btn-success";
                                         } else if ($visitor_limit - $h->count < 1) {
                                             $button_style = "btn-outline-danger";
+                                            $button_disabled = "disabled";
+                                        }
+
+                                        if ($h->start < (new DateTime())->getTimestamp()) {
                                             $button_disabled = "disabled";
                                         }
                                         ?>
