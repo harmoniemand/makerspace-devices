@@ -39,6 +39,10 @@ class ReservationEntity
     {
         require dirname(__FILE__) . '/partials/reservation-editor.partial.php';
     }
+    public function renderSubmenuReservationPOS()
+    {
+        require dirname(__FILE__) . '/partials/reservation-pos.partial.php';
+    }
 
     public function registerAdminMenu()
     {
@@ -55,6 +59,18 @@ class ReservationEntity
             $menu_slug,
             $function,
             $icon_url
+        );
+
+        $subpage_title = 'POS';
+        $submenu_title = 'POS';
+        $submenu_slug = 'reservations-pos';
+        add_submenu_page(
+            $menu_slug,
+            $subpage_title,
+            $submenu_title,
+            "edit_others_posts",
+            $submenu_slug,
+            array($this, "renderSubmenuReservationPOS")
         );
     }
 
@@ -73,7 +89,8 @@ class ReservationEntity
     }
 
     // Registrieren von Widgets
-    public function render_dashboard_widget_register_for_visit() {
+    public function render_dashboard_widget_register_for_visit()
+    {
         require dirname(__FILE__) . '/partials/widget-register.partial.php';
     }
 
@@ -96,7 +113,7 @@ class ReservationEntity
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));
         add_action('init', array($this, 'register_Shortcodes'));
-        add_action( 'wp_dashboard_setup', array($this, 'register_dashboard_widgets') );
+        add_action('wp_dashboard_setup', array($this, 'register_dashboard_widgets'));
     }
 
     public function activate()
@@ -113,6 +130,17 @@ class ReservationEntity
                 mar_deleted INT,
                 mar_term_id bigint(20),
                 mse_device_message TEXT
+                )
+            ";
+
+        $wpdb->get_results($sql);
+
+
+        $sql = "
+                CREATE TABLE IF NOT EXISTS makerspace_presence_logs (
+                mpl_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                mpl_user_id  bigint(20) NOT NULL,
+                mpl_datetime datetime NOT NULL
                 )
             ";
 
