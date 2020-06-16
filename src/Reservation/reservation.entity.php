@@ -83,9 +83,34 @@ class ReservationEntity
         return $ReturnString;
     }
 
+    public function shortcode_visitor_count($atts) {
+        global $wpdb;
+        
+        $sql = "SELECT COUNT(mpl_id) as count FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN %s AND %s GROUP BY mpl_user_id";
+        $day_start = (get_datetime()->setTime(0, 0, 0));
+        $day_end = (get_datetime()->setTime(23, 59, 59));
+        
+
+        $entries = $wpdb->get_results($wpdb->prepare(
+            $sql,
+            $day_start->format("Y-m-d H:i:s"),
+            $day_end->format("Y-m-d H:i:s")
+        ));
+
+        $count = 0;
+        foreach ($entries as $e) {
+            if ($e->count % 2 == 1) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
     public function register_shortcodes()
     {
         add_shortcode('registrations_table', array($this, "shortcode_table"));
+        add_shortcode('registrations_visitor_count', array($this, "shortcode_visitor_count"));
     }
 
     // Registrieren von Widgets
