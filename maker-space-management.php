@@ -26,20 +26,27 @@
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
-define( 'MSM_FILE', __FILE__ );
-define( 'MSM_DIR', __DIR__ );
+define('MSM_FILE', __FILE__);
+define('MSM_DIR', __DIR__);
+
+define('MSM_DATETIME_FORMAT', "Y-m-d H:i:s");
+
+
+function get_datetime()
+{
+	return new DateTime(current_time(MSM_DATETIME_FORMAT));
+}
+
 
 
 // the main plugin class
-require_once dirname( __FILE__ ) . '/src/main.php';
+require_once dirname(__FILE__) . '/src/main.php';
 
 MS_Devices_Main::instance();
 
-register_activation_hook( __FILE__, array( 'MS_Devices_Main', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'MS_Devices_Main', 'deactivate' ) );
-
-
+register_activation_hook(__FILE__, array('MS_Devices_Main', 'activate'));
+register_deactivation_hook(__FILE__, array('MS_Devices_Main', 'deactivate'));

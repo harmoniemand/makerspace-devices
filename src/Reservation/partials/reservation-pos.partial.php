@@ -6,7 +6,7 @@ $visitor_limit = get_option("makerspace_visitor_limit");
 $error = "";
 
 
-$today = new DateTime();
+$today = get_datetime();
 $offset = 0;
 if (isset($_GET["offset"])) {
     $offset = $_GET["offset"];
@@ -23,11 +23,11 @@ $day = (object) array(
 
 // create arrive / leave log
 if (isset($_POST["mp_create_log"])) {
-    $sql_mp_create_log = "INSERT INTO makerspace_presence_logs (mpl_user_id, mpl_timestamp) values (%d, %d)";
+    $sql_mp_create_log = "INSERT INTO makerspace_presence_logs (mpl_user_id, mpl_datetime) values (%d, %s)";
     $wpdb->get_results($wpdb->prepare(
         $sql_mp_create_log,
         $_POST["mp_create_log"],
-        new DateTime()
+        get_datetime()->format("Y-m-d H:i:s")
     ));
 }
 
@@ -97,6 +97,7 @@ for ($hour = 15; $hour < 22; $hour++) {
     <div class="row mt-3" style="max-width: 100%;">
         <div class="col">
             <h1 class="wp-heading-inline" style="font-size: 23px;">POS</h1>
+            <span><?php echo get_datetime()->format("Y-m-d H:i:s") ?></span>
         </div>
     </div>
 
@@ -132,7 +133,7 @@ for ($hour = 15; $hour < 22; $hour++) {
                         </a>
                     </div>
 
-                    <div class="row">
+                    <div class="row d-none d-md-flex">
 
                         <div class="col-2 font-weight-bold">
                             <span class="mr-2">Vorname</span>
@@ -152,7 +153,7 @@ for ($hour = 15; $hour < 22; $hour++) {
 
 
                     <?php foreach ($reservations as $r) : ?>
-                        <div class="row mb-2">
+                        <div class="row mb-2 mt-4 mt-md-0">
                             <?php
 
                             $r_user = get_userdata($r->mar_user_id);
@@ -161,42 +162,49 @@ for ($hour = 15; $hour < 22; $hour++) {
                             $r_to = new DateTime();
                             $r_to->setTimestamp($r->mar_to);
 
-                            // $is_here = false;
-                            // $mpl_sql = "SELECT * FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN  %d AND %d AND mpl_user_id = %d";
-                            // $mpl_entries = $wpdb->get_results($wpdb->prepare(
-                            //     $mpl_sql,
-                            //     $day->start,
-                            //     $day->end,
-                            //     $r->mar_user_id
-                            // ));
+                            $is_here = false;
+                            $mpl_sql = "SELECT * FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN  %s AND %s AND mpl_user_id = %d";
+                            $mpl_entries = $wpdb->get_results($wpdb->prepare(
+                                $mpl_sql,
+                                $day->start->format("Y-m-d H:i:s"),
+                                $day->end->format("Y-m-d H:i:s"),
+                                $r->mar_user_id
+                            ));
 
+                            $disable_create_log = "disabled";
+                            if (get_datetime()->format("Y-m-d") == $day->start->format("Y-m-d")) {
+                                $disable_create_log = "";
+                            }
 
                             ?>
 
-                            <div class="col-2">
-                                <span class="mr-2">
+                            <div class="col-12 col-md-2">
+                                <span class="">
                                     <?php echo $r_user->user_firstname ?>
                                 </span>
                             </div>
-                            <div class="col-2">
-                                <span class="mr-2">
+                            <div class="col-12 col-md-2">
+                                <span class="">
                                     <?php echo $r_user->user_lastname  ?>
                                 </span>
                             </div>
-                            <div class="col-2">
-                                <span class="mr-2">
+                            <div class="col-12 col-md-2">
+                                <span class="">
                                     <?php echo $r_user->user_login  ?>
                                 </span>
                             </div>
 
-                            <div class="col-2">
+                            <div class="col-12 col-md-2">
                                 <span class=""><?php echo $r_from->format('H:i') ?></span>
                                 -
                                 <span class=""><?php echo $r_to->format('H:i') ?></span>
                             </div>
-                            <div class="col-4">
-
-                                    <button type="submit" class="btn btn-outline-success btn-sm" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>">kommen</button>
+                            <div class="col-12 col-md-4">
+                                <?php if (count($mpl_entries) % 2 == 0) : ?>
+                                    <button type="submit" class="btn btn-outline-success btn-sm" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>kommen</button>
+                                <?php else : ?>
+                                    <button type="submit" class="btn btn-outline-success btn-sm" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>gehen</button>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
