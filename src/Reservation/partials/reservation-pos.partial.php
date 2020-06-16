@@ -31,6 +31,24 @@ if (isset($_POST["mp_create_log"])) {
     ));
 }
 
+// toggle security instruction
+if (isset($_POST["ms_user_corona_safetyinstruction"])) {
+    if (get_user_meta($_POST["ms_user_corona_safetyinstruction"], "ms_user_corona_safetyinstruction")) {
+        delete_user_meta($_POST["ms_user_corona_safetyinstruction"], "ms_user_corona_safetyinstruction");
+    } else {
+        add_user_meta($_POST["ms_user_corona_safetyinstruction"], "ms_user_corona_safetyinstruction", get_datetime());
+    }
+}
+
+
+// toggle contact 
+if (isset($_POST["ms_user_corona_adress"])) {
+    if (get_user_meta($_POST["ms_user_corona_adress"], "ms_user_corona_adress")) {
+        delete_user_meta($_POST["ms_user_corona_adress"], "ms_user_corona_adress");
+    } else {
+        add_user_meta($_POST["ms_user_corona_adress"], "ms_user_corona_adress", get_datetime());
+    }
+}
 
 
 
@@ -147,7 +165,13 @@ for ($hour = 15; $hour < 22; $hour++) {
                         <div class="col-2 font-weight-bold">
                             <span class="mr-2">Von - Bis</span>
                         </div>
-                        <div class="col-4 font-weight-bold"></div>
+                        <div class="col-1 font-weight-bold">
+                            <span class="mr-2" title="Sicherheitsunterweisung">SU</span>
+                        </div>
+                        <div class="col-1 font-weight-bold">
+                            <span class="mr-2" style="font-size: 0.7rem;">Anschrift</span>
+                        </div>
+                        <div class="col-2 font-weight-bold"></div>
                     </div>
 
 
@@ -199,7 +223,40 @@ for ($hour = 15; $hour < 22; $hour++) {
                                 -
                                 <span class=""><?php echo $r_to->format('H:i') ?></span>
                             </div>
-                            <div class="col-12 col-md-4">
+
+
+                            <div class="col-12 col-md-1">
+                                <span class="">
+
+                                    <?php if (get_user_meta($r->mar_user_id, 'ms_user_corona_safetyinstruction', false)) : ?>
+                                        <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_safetyinstruction" name="ms_user_corona_safetyinstruction" value="<?php echo $r->mar_user_id ?>">
+                                            <clr-icon shape="check"></clr-icon>
+                                        </button>
+                                    <?php else : ?>
+                                        <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_safetyinstruction" name="ms_user_corona_safetyinstruction" value="<?php echo $r->mar_user_id ?>">
+                                            <clr-icon shape="times"></clr-icon>
+                                        </button>
+                                    <?php endif; ?>
+
+                                </span>
+                            </div>
+                            <div class="col-12 col-md-1">
+                                <span class="">
+
+                                    <?php if (get_user_meta($r->mar_user_id, 'ms_user_corona_adress', false)) : ?>
+                                        <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_adress" name="ms_user_corona_adress" value="<?php echo $r->mar_user_id ?>">
+                                            <clr-icon shape="check"></clr-icon>
+                                        </button>
+                                    <?php else : ?>
+                                        <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_adress" name="ms_user_corona_adress" value="<?php echo $r->mar_user_id ?>">
+                                            <clr-icon shape="times"></clr-icon>
+                                        </button>
+                                    <?php endif; ?>
+
+                                </span>
+                            </div>
+
+                            <div class="col-12 col-md-2">
                                 <?php if (count($mpl_entries) % 2 == 0) : ?>
                                     <button type="submit" class="btn btn-outline-success btn-sm" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>kommen</button>
                                 <?php else : ?>
