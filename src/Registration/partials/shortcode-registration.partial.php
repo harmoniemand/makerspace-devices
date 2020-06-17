@@ -84,6 +84,9 @@
                         $info["objectClass"][0] = "posixAccount";
                         $info["objectClass"][1] = "inetOrgPerson";
 
+                        $info["mail"] = $mse_registration_email;
+
+
                         // echo "<pre>";
                         // print_r($info);
                         // echo "</pre>";
