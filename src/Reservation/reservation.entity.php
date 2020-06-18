@@ -83,6 +83,7 @@ class ReservationEntity
         return $ReturnString;
     }
 
+    
     public function shortcode_visitor_count($atts) {
         global $wpdb;
         
@@ -106,6 +107,22 @@ class ReservationEntity
 
         return $count;
     }
+
+    public function api_get_reservation_presence_count($data)
+    {
+        return (object)array(
+            "count" => $this->shortcode_visitor_count(null)
+        );
+    }
+
+    public function register_api_endpoints() {
+
+            register_rest_route( 'makerspace/v1', '/presence', array(
+              'methods' => 'GET',
+              'callback' => array($this, 'api_get_reservation_presence_count'),
+            ) );
+    }
+
 
     public function register_shortcodes()
     {
@@ -139,6 +156,7 @@ class ReservationEntity
         add_action('admin_menu', array($this, "registerAdminMenu"));
         add_action('init', array($this, 'register_Shortcodes'));
         add_action('wp_dashboard_setup', array($this, 'register_dashboard_widgets'));
+        add_action('rest_api_init', array($this, 'register_api_endpoints'));
     }
 
     public function activate()

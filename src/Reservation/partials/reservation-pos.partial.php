@@ -94,6 +94,14 @@ for ($hour = 15; $hour < 22; $hour++) {
     array_push($day->hours, $h);
 }
 
+usort($reservations, function($a, $b) {
+    if (isset($a->start) && isset($b->start)) {
+        return $a->start - $b->start;
+    } else {
+        return 0;
+    }
+});
+
 
 ?>
 
