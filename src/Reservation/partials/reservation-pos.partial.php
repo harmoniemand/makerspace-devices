@@ -94,7 +94,7 @@ for ($hour = 15; $hour < 22; $hour++) {
     array_push($day->hours, $h);
 }
 
-usort($reservations, function($a, $b) {
+usort($reservations, function ($a, $b) {
     if (isset($a->start) && isset($b->start)) {
         return $a->start - $b->start;
     } else {
@@ -267,9 +267,15 @@ usort($reservations, function($a, $b) {
 
                             <div class="col-12 col-md-2">
                                 <?php if (count($mpl_entries) % 2 == 0) : ?>
-                                    <button type="submit" class="btn btn-outline-success btn-sm w-100" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>kommen</button>
+                                    <button type="submit" class="btn btn-outline-dark btn-sm w-100" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>
+                                        <clr-icon shape="login"></clr-icon>
+                                        kommen
+                                    </button>
                                 <?php else : ?>
-                                    <button type="submit" class="btn btn-outline-success btn-sm w-100" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>gehen</button>
+                                    <button type="submit" class="btn btn-outline-dark btn-sm w-100" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>
+                                    <clr-icon shape="logout"></clr-icon>
+                                    gehen
+                                    </button>
                                 <?php endif; ?>
                             </div>
                         </div>
