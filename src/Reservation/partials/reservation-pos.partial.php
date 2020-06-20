@@ -185,7 +185,7 @@ usort($reservations, function($a, $b) {
 
 
                     <?php foreach ($reservations as $r) : ?>
-                        <div class="row mb-2 mt-4 mt-md-0">
+                        <div class="row mb-2 mt-4 mt-md-0 bg-alternating p-2 p-md-0">
                             <?php
 
                             $r_user = get_userdata($r->mar_user_id);
@@ -210,30 +210,31 @@ usort($reservations, function($a, $b) {
 
                             ?>
 
-                            <div class="col-12 col-md-2">
+
+                            <div class="col-4 col-md-2">
                                 <span class="">
                                     <?php echo $r_user->user_firstname ?>
                                 </span>
                             </div>
-                            <div class="col-12 col-md-2">
+                            <div class="col-4 col-md-2">
                                 <span class="">
                                     <?php echo $r_user->user_lastname  ?>
                                 </span>
                             </div>
-                            <div class="col-12 col-md-2">
+                            <div class="col-4 col-md-2">
                                 <span class="">
                                     <?php echo $r_user->user_login  ?>
                                 </span>
                             </div>
 
-                            <div class="col-12 col-md-2">
+                            <div class="col-6 col-md-2">
                                 <span class=""><?php echo $r_from->format('H:i') ?></span>
                                 -
                                 <span class=""><?php echo $r_to->format('H:i') ?></span>
                             </div>
 
 
-                            <div class="col-12 col-md-1">
+                            <div class="col-3 col-md-1">
                                 <span class="">
 
                                     <?php if (get_user_meta($r->mar_user_id, 'ms_user_corona_safetyinstruction', false)) : ?>
@@ -248,7 +249,7 @@ usort($reservations, function($a, $b) {
 
                                 </span>
                             </div>
-                            <div class="col-12 col-md-1">
+                            <div class="col-3 col-md-1">
                                 <span class="">
 
                                     <?php if (get_user_meta($r->mar_user_id, 'ms_user_corona_adress', false)) : ?>
@@ -266,9 +267,9 @@ usort($reservations, function($a, $b) {
 
                             <div class="col-12 col-md-2">
                                 <?php if (count($mpl_entries) % 2 == 0) : ?>
-                                    <button type="submit" class="btn btn-outline-success btn-sm" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>kommen</button>
+                                    <button type="submit" class="btn btn-outline-success btn-sm w-100" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>kommen</button>
                                 <?php else : ?>
-                                    <button type="submit" class="btn btn-outline-success btn-sm" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>gehen</button>
+                                    <button type="submit" class="btn btn-outline-success btn-sm w-100" id="mp_create_log" name="mp_create_log" value="<?php echo $r->mar_user_id ?>" <?php echo $disable_create_log ?>>gehen</button>
                                 <?php endif; ?>
                             </div>
                         </div>
