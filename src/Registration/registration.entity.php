@@ -76,6 +76,7 @@ class RegistrationEntity
             $user = wp_signon($credentials, false);
 
             if (is_wp_error($user)) {
+                print_r($user);
                 // print_r($user);
             } else {
                 $userID = $user->ID;
