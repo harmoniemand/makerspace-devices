@@ -41,7 +41,7 @@ class ReservationEntity
     }
     public function renderSubmenuReservationPOS()
     {
-        require dirname(__FILE__) . '/partials/reservation-pos.partial.php';
+        require dirname(__FILE__) . '/partials/reservation-pos.controller.php';
     }
 
     public function registerAdminMenu()
@@ -83,20 +83,30 @@ class ReservationEntity
         return $ReturnString;
     }
 
-    
-    public function shortcode_visitor_count($atts) {
+    public function get_visitors_between($from, $to) {
         global $wpdb;
-        
-        $sql = "SELECT COUNT(mpl_id) as count FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN %s AND %s GROUP BY mpl_user_id";
-        $day_start = (get_datetime()->setTime(0, 0, 0));
-        $day_end = (get_datetime()->setTime(23, 59, 59));
-        
 
+        $sql = "SELECT mpl_id, COUNT(mpl_id) as count FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN %s AND %s GROUP BY mpl_user_id";
+       
         $entries = $wpdb->get_results($wpdb->prepare(
             $sql,
-            $day_start->format("Y-m-d H:i:s"),
-            $day_end->format("Y-m-d H:i:s")
+            $from->format("Y-m-d H:i:s"),
+            $to->format("Y-m-d H:i:s")
         ));
+    }
+
+    // returns log-count per visitor for a given date
+    public function get_visitors_today($date) {
+        $day_start = ($date->setTime(0, 0, 0));
+        $day_end = ($date->setTime(23, 59, 59));
+
+        return get_visitors_between($day_start, $day_end);
+    }
+
+    // returns count of present visitors 
+    public function shortcode_visitor_count($atts)
+    {
+        $entries = $this->get_visitors_today(get_datetime());
 
         $count = 0;
         foreach ($entries as $e) {
@@ -110,17 +120,38 @@ class ReservationEntity
 
     public function api_get_reservation_presence_count($data)
     {
-        return (object)array(
+
+        return $data;
+
+        $date = get_datetime();
+
+        // if (isset($data)) {
+        //     $date = 
+        // }
+
+        return (object) array(
             "count" => $this->shortcode_visitor_count(null)
         );
     }
+    
+    public function api_get_reservation_presence_count_sum($data)
+    {
+        $entries = $this->get_visitors_today(get_datetime());
+        return count($entries);
+    }
 
-    public function register_api_endpoints() {
+    public function register_api_endpoints()
+    {
 
-            register_rest_route( 'makerspace/v1', '/presence', array(
-              'methods' => 'GET',
-              'callback' => array($this, 'api_get_reservation_presence_count'),
-            ) );
+        register_rest_route('makerspace/v1', '/presence', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'api_get_reservation_presence_count'),
+        ));
+
+        register_rest_route('makerspace/v1', '/presence/sum', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'api_get_reservation_presence_count_sum'),
+        ));
     }
 
 
