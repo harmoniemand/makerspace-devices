@@ -90,8 +90,11 @@ class RegistrationEntity
                 do_action('wp_login', $credentials['user_login']);
 
                 if (is_user_logged_in()) {
+                    error_log("user is logged in");
                     wp_redirect("/wp-admin");
                     exit();
+                } else {
+                    error_log("somethign went wrong while logging in");
                 }
             }
         }
