@@ -73,17 +73,17 @@ class RegistrationEntity
             $credentials['user_password'] = $_POST["mse_passwort"];
             $credentials['remember'] = isset($_POST["mse_remember"]) ? $_POST["mse_remember"] : false;
 
-            $user = wp_signon($credentials, false);
+            $user_signon = wp_signon($credentials);
 
             error_log("using custom login");
-            error_log( print_r( $user, true ) );
+            error_log( print_r( $user_signon, true ) );
 
-            if (is_wp_error($user)) {
+            if (is_wp_error($user_signon)) {
                 error_log("error while logging in");
-                error_log($user);
+                error_log($user_signon);
                 // print_r($user);
             } else {
-                $userID = $user->ID;
+                $userID = $user_signon->ID;
 
                 wp_set_current_user($userID, $credentials['user_login']);
                 wp_set_auth_cookie($userID, true, false);
@@ -91,7 +91,7 @@ class RegistrationEntity
 
                 if (is_user_logged_in()) {
                     error_log("user is logged in");
-                    wp_redirect("/wp-admin");
+                    wp_redirect("/wp-admin/");
                     exit();
                 } else {
                     error_log("somethign went wrong while logging in");
