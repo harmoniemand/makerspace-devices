@@ -76,7 +76,7 @@ class RegistrationEntity
             $user = wp_signon($credentials, false);
 
             error_log("using custom login");
-            error_log($user);
+            error_log( print_r( $user, true ) );
 
             if (is_wp_error($user)) {
                 error_log("error while logging in");
