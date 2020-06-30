@@ -43,6 +43,11 @@ class ReservationEntity
     {
         require dirname(__FILE__) . '/partials/reservation-pos.controller.php';
     }
+    public function renderSubmenuReservationTimeline()
+    {
+        require dirname(__FILE__) . '/partials/reservation-pos.controller.php';
+        // require dirname(__FILE__) . '/partials/reservation-timeline.partial.php';
+    }
 
     public function registerAdminMenu()
     {
@@ -59,6 +64,18 @@ class ReservationEntity
             $menu_slug,
             $function,
             $icon_url
+        );
+
+        $subpage_title = 'Timeline';
+        $submenu_title = 'Timeline';
+        $submenu_slug = 'reservations-timeline';
+        add_submenu_page(
+            $menu_slug,
+            $subpage_title,
+            $submenu_title,
+            "edit_others_posts",
+            $submenu_slug,
+            array($this, "renderSubmenuReservationTimeline")
         );
 
         $subpage_title = 'POS';
@@ -96,7 +113,7 @@ class ReservationEntity
     }
 
     // returns log-count per visitor for a given date
-    public function get_visitors_today($date) {
+    public function get_visitors_by_day($date) {
         $day_start = ($date->setTime(0, 0, 0));
         $day_end = ($date->setTime(23, 59, 59));
 
@@ -106,7 +123,7 @@ class ReservationEntity
     // returns count of present visitors 
     public function shortcode_visitor_count($atts)
     {
-        $entries = $this->get_visitors_today(get_datetime());
+        $entries = $this->get_visitors_by_day(get_datetime());
 
         $count = 0;
         foreach ($entries as $e) {
@@ -136,7 +153,7 @@ class ReservationEntity
     
     public function api_get_reservation_presence_count_sum($data)
     {
-        $entries = $this->get_visitors_today(get_datetime());
+        $entries = $this->get_visitors_by_day(get_datetime());
         return count($entries);
     }
 

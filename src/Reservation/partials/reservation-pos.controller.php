@@ -114,4 +114,8 @@ if ($url_data->tab != "all") {
     }
 }
 
-require dirname(__FILE__) . "/reservation-pos.partial.php";
+if ($_GET["page"] == "reservations-timeline") {
+    require dirname(__FILE__) . "/reservation-timeline.partial.php";
+} else {
+    require dirname(__FILE__) . "/reservation-pos.partial.php";
+}
