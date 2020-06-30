@@ -75,8 +75,12 @@ class RegistrationEntity
 
             $user = wp_signon($credentials, false);
 
+            error_log("using custom login");
+            error_log($user);
+
             if (is_wp_error($user)) {
-                print_r($user);
+                error_log("error while logging in");
+                error_log($user);
                 // print_r($user);
             } else {
                 $userID = $user->ID;
