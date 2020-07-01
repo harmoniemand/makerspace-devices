@@ -4,17 +4,23 @@
     <!-- <a href="/wp-admin/post-new.php?post_type=page" class="page-title-action">Erstellen</a> -->
     <hr class="wp-header-end">
 
+    <h2 class="screen-reader-text">Seitenliste filtern</h2>
+    <ul class="subsubsub">
+        <li class="all"><a href="edit.php?post_type=page&amp;all_posts=1" class="current" aria-current="page">Heute <span class="count">(20)</span></a> |</li>
+        <li class="mine"><a href="edit.php?post_type=page&amp;author=3">Alle Besucherenden <span class="count">(16)</span></a></li>
+    </ul>
 
 
-    <div class="" style="position: relative; display: block; width: 100%; border: solid 1px #222; min-height: 50px; padding: 0.2rem;">
-        <div style="display: flex;">
-            <div style="width: 100%;">15:00</div>
-            <div style="width: 100%;">16:00</div>
-            <div style="width: 100%;">17:00</div>
-            <div style="width: 100%;">18:00</div>
-            <div style="width: 100%;">19:00</div>
-            <div style="width: 100%;">20:00</div>
-            <div style="width: 100%;">21:00</div>
+
+    <div class="" style="clear: both; position: relative; display: block; width: 100%; border: solid 1px #222; min-height: 50px; min-height: 80vh; padding-top: 50px;">
+        <div style="display: flex; height: 100%; position: absolute; left: 0; right: 0; top: 0;">
+            <div style="padding: .5rem; width: 100%; height: 100%; background: rgba(0,0,0,0.1);">15:00</div>
+            <div style="padding: .5rem; width: 100%;">16:00</div>
+            <div style="padding: .5rem; width: 100%; height: 100%; background: rgba(0,0,0,0.1);">17:00</div>
+            <div style="padding: .5rem; width: 100%;">18:00</div>
+            <div style="padding: .5rem; width: 100%; height: 100%; background: rgba(0,0,0,0.1);">19:00</div>
+            <div style="padding: .5rem; width: 100%;">20:00</div>
+            <div style="padding: .5rem; width: 100%; height: 100%; background: rgba(0,0,0,0.1);">21:00</div>
         </div>
 
         <?php
@@ -48,12 +54,22 @@
                 $disable_create_log = "";
             }
 
-            $margin_left = ($r_from->format('H') - 15) * 14.2;
-            $width = (($r_to->format('H') + 1) - $r_from->format('H')) * 14.2;
+            $margin_left = ($r_from->format('H') - 15) * 14.28;
+            $width = (($r_to->format('H') + 1) - $r_from->format('H')) * 14.28;
+
+            $color = get_user_meta($r->mar_user_id, 'visitor_color', true);
+            if (empty($color)) {
+                $color = get_option("makerspace_visitor_default_color");
+            }
+
+            $border_color = $color;
+
+            $color = str_replace("#", "", $color);
+            $background_color = "rgba(" . hexdec(substr($color, 0, 2)) . "," . hexdec(substr($color, 2, 2)) . ",". hexdec(substr($color, 4, 2)) . ",0.2)";
 
             ?>
 
-            <div style="margin-top: 0.2rem; margin-left: <?php echo $margin_left ?>%; width: <?php echo $width ?>%; border: solid 1px red; padding: 0.3rem;">
+            <div style="margin-top: .4rem; margin-left: <?php echo $margin_left ?>%; width: <?php echo $width ?>%; background: <?php echo $background_color ?>; border: solid 1px <?php echo $border_color ?>; padding: 0.3rem;">
                 <?php echo $r_user->user_firstname ?>
                 <?php echo $r_user->user_lastname  ?>
                 (<?php echo $r_user->user_login  ?>)

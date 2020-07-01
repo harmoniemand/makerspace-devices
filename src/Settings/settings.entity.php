@@ -58,6 +58,34 @@ class SettingsEntity
         );
     }
 
+    public function save_forms()
+    {
+        if (isset($_POST['makerspace_settings_nonce'])) {
+            $this->save_form_settings();
+        }
+
+
+    }
+
+    public function save_form_settings()
+    {
+        // print_r($_POST);
+
+        update_option('makerspace_ldap_server', $_POST['makerspace_ldap_server']);
+        update_option('makerspace_ldap_port', $_POST['makerspace_ldap_port']);
+        update_option('makerspace_ldap_admin', $_POST['makerspace_ldap_admin']);
+        update_option('makerspace_ldap_admin_pass', $_POST['makerspace_ldap_admin_pass']);
+        update_option('makerspace_ldap_user_ou', $_POST['makerspace_ldap_user_ou']);
+        update_option('makerspace_ldap_gid_number_visitors', $_POST['makerspace_ldap_gid_number_visitors']);
+
+        update_option('makerspace_visitor_limit', $_POST['makerspace_visitor_limit']);
+        update_option('makerspace_visitor_default_color', $_POST['makerspace_visitor_default_color']);
+
+
+        global $save_form_settings_saved;
+        $save_form_settings_saved = true;
+    }
+
     public function load_styles()
     {
         // wp_enqueue_style('css-custom-entity-reservation', plugins_url('reservation.styles.css', __FILE__));
@@ -65,12 +93,12 @@ class SettingsEntity
 
     public function register()
     {
+        add_action('init', array($this, 'save_forms'));
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));
     }
 
     public function activate()
     {
-        
     }
 }
