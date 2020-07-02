@@ -24,7 +24,7 @@
     $mse_registration_information = false;
 
 
-    if (isset($_POST["makerspace_settings_nonce"])) {
+    if (isset($_POST["makerspace_registration_form_nonce"])) {
 
         $mse_registration_username = $_POST["mse_registration_username"];
         $mse_registration_passwort = $_POST["mse_registration_passwort"];
@@ -133,7 +133,7 @@
 
         <form method="post" action="<?php echo get_permalink(); ?>">
 
-            <?php wp_nonce_field(basename(__FILE__), 'makerspace_settings_nonce'); ?>
+            <?php wp_nonce_field(basename(__FILE__), 'makerspace_registration_form_nonce'); ?>
 
 
             <div class="container">

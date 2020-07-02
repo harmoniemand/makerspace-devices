@@ -6,8 +6,17 @@
 
     <h2 class="screen-reader-text">Seitenliste filtern</h2>
     <ul class="subsubsub">
-        <li class="all"><a href="edit.php?post_type=page&amp;all_posts=1" class="current" aria-current="page">Heute <span class="count">(20)</span></a> |</li>
-        <li class="mine"><a href="edit.php?post_type=page&amp;author=3">Alle Besucherenden <span class="count">(16)</span></a></li>
+        <li class="all">
+            <a>
+                Angemeldet <span class="count">(<?php echo count($reservations) ?>)</span> |
+            </a>
+        </li>
+
+        <li class="mine">
+            <a>
+                Anwesend <span class="count">()</span>
+            </a>
+        </li>
     </ul>
 
 
@@ -65,14 +74,23 @@
             $border_color = $color;
 
             $color = str_replace("#", "", $color);
-            $background_color = "rgba(" . hexdec(substr($color, 0, 2)) . "," . hexdec(substr($color, 2, 2)) . ",". hexdec(substr($color, 4, 2)) . ",0.2)";
+            $background_color = "rgba(" . hexdec(substr($color, 0, 2)) . "," . hexdec(substr($color, 2, 2)) . "," . hexdec(substr($color, 4, 2)) . ",0.2)";
 
             ?>
 
-            <div style="margin-top: .4rem; margin-left: <?php echo $margin_left ?>%; width: <?php echo $width ?>%; background: <?php echo $background_color ?>; border: solid 1px <?php echo $border_color ?>; padding: 0.3rem;">
+            <div style="position: relative; margin-top: .4rem; margin-left: <?php echo $margin_left ?>%; width: <?php echo $width ?>%; background: <?php echo $background_color ?>; border: solid 1px <?php echo $border_color ?>; padding: 0.3rem;">
                 <?php echo $r_user->user_firstname ?>
                 <?php echo $r_user->user_lastname  ?>
                 (<?php echo $r_user->user_login  ?>)
+
+                <?php if (count($mpl_entries) > 0) : ?>
+                    <?php if (count($mpl_entries) % 2 == 0) : ?>
+                        <clr-icon shape="logout-circle" size="28" title="gegangen"></clr-icon>
+                    <?php else : ?>
+                        <clr-icon shape="check-circle" size="28" class="is-success" title="anwesend"></clr-icon>
+                    <?php endif; ?>
+                <?php endif; ?>
+
             </div>
 
         <?php endforeach; ?>
