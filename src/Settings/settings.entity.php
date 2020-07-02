@@ -71,19 +71,7 @@ class SettingsEntity
     {
         // print_r($_POST);
 
-        update_option('makerspace_ldap_server', $_POST['makerspace_ldap_server']);
-        update_option('makerspace_ldap_port', $_POST['makerspace_ldap_port']);
-        update_option('makerspace_ldap_admin', $_POST['makerspace_ldap_admin']);
-        update_option('makerspace_ldap_admin_pass', $_POST['makerspace_ldap_admin_pass']);
-        update_option('makerspace_ldap_user_ou', $_POST['makerspace_ldap_user_ou']);
-        update_option('makerspace_ldap_gid_number_visitors', $_POST['makerspace_ldap_gid_number_visitors']);
-
-        update_option('makerspace_visitor_limit', $_POST['makerspace_visitor_limit']);
-        update_option('makerspace_visitor_default_color', $_POST['makerspace_visitor_default_color']);
-
-
-        global $save_form_settings_saved;
-        $save_form_settings_saved = true;
+        
     }
 
     public function load_styles()

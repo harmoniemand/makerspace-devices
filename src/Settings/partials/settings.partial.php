@@ -1,6 +1,22 @@
 <?php
 
-global $save_form_settings_saved;
+$save_form_settings_saved = false;
+
+
+if (isset($_POST['makerspace_settings_nonce'])) {
+
+    update_option('makerspace_ldap_server', $_POST['makerspace_ldap_server']);
+    update_option('makerspace_ldap_port', $_POST['makerspace_ldap_port']);
+    update_option('makerspace_ldap_admin', $_POST['makerspace_ldap_admin']);
+    update_option('makerspace_ldap_admin_pass', $_POST['makerspace_ldap_admin_pass']);
+    update_option('makerspace_ldap_user_ou', $_POST['makerspace_ldap_user_ou']);
+    update_option('makerspace_ldap_gid_number_visitors', $_POST['makerspace_ldap_gid_number_visitors']);
+
+    update_option('makerspace_visitor_limit', $_POST['makerspace_visitor_limit']);
+    update_option('makerspace_visitor_default_color', $_POST['makerspace_visitor_default_color']);
+    $save_form_settings_saved = true;
+}
+
 
 $makerspace_ldap_server = get_option("makerspace_ldap_server");
 $makerspace_ldap_port = get_option("makerspace_ldap_port");
