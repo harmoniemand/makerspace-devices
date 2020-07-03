@@ -113,17 +113,18 @@ class ReservationEntity
     }
 
     // returns log-count per visitor for a given date
-    public function get_visitors_by_day($date) {
+    public function get_visitors_by_day($date)  {
         $day_start = ($date->setTime(0, 0, 0));
         $day_end = ($date->setTime(23, 59, 59));
 
-        return get_visitors_between($day_start, $day_end);
+        return $this->get_visitors_between($day_start, $day_end);
     }
 
     // returns count of present visitors 
     public function shortcode_visitor_count($atts)
     {
         $entries = $this->get_visitors_by_day(get_datetime());
+        return $entries;
 
         $count = 0;
         foreach ($entries as $e) {
@@ -138,13 +139,11 @@ class ReservationEntity
     public function api_get_reservation_presence_count($data)
     {
 
-        return $data;
-
         $date = get_datetime();
 
-        // if (isset($data)) {
-        //     $date = 
-        // }
+        if (empty($data)) {
+            $date = new DateTime($data);
+        }
 
         return (object) array(
             "count" => $this->shortcode_visitor_count(null)
@@ -153,8 +152,10 @@ class ReservationEntity
     
     public function api_get_reservation_presence_count_sum($data)
     {
+        return $_GET;
+
         $entries = $this->get_visitors_by_day(get_datetime());
-        return count($entries);
+        return $entries;
     }
 
     public function register_api_endpoints()

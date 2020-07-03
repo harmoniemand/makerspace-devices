@@ -14,3 +14,8 @@ Also passwort changing is implementet in this plugin.
 Due to COVID19 we are forced to offer timeslots for our visitors, as we could only welcome a limited amount of visitors simultanious. The number of visitors can be set in the plugins settings page.
 
 ![screenshot](docs/b1.png)
+
+#### Shortcodes
+
+* shortcode_visitor_count -> renders the current count of visitors marked as on location
+* shortcode_table -> renders the table with the free seats per timeslot
