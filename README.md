@@ -12,3 +12,5 @@ Also passwort changing is implementet in this plugin.
 ### Managing Timeslot Reservation
 
 Due to COVID19 we are forced to offer timeslots for our visitors, as we could only welcome a limited amount of visitors simultanious. The number of visitors can be set in the plugins settings page.
+
+[docs/2020-07-03 03_08_13-Reservierungen ‹ Maker Space DEV — WordPress.png]
