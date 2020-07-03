@@ -15,7 +15,30 @@ Due to COVID19 we are forced to offer timeslots for our visitors, as we could on
 
 ![screenshot](docs/b1.png)
 
-#### Shortcodes
+### POS - Deck
+
+For logging visitors arriving/leaving the maker space. 
+It is also showing, if you got the needed contact information and security/healt instructions for your visitors.
+
+![timeline](docs/b3.png)
+
+
+
+### POS - Timeline
+
+Got some timelines to see the planned arrivals of your visitors.
+
+![timeline](docs/b2.png)
+
+
+### Shortcodes
 
 * shortcode_visitor_count -> renders the current count of visitors marked as on location
 * shortcode_table -> renders the table with the free seats per timeslot
+
+
+## ToDo
+
+* Update settings for LDAP, make it work without LDAP in Background
+* Language Support
+* Sorting tables in POS Page
