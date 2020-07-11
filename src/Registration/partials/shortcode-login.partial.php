@@ -49,13 +49,24 @@
                                 </label>
                             </div>
                         </div>
+
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
                         <a href="/registration">Registrieren</a>
                         <button type="submit" class="btn btn-primary">Anmelden</button>
                     </div>
+                    <div class="modal-footer d-flex p-1">
+                        <div class="col-12">
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <a href="/reset-password">
+                                        Ich habe mein Passwort vergessen
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
         </form>
     </div>
