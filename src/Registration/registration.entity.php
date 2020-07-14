@@ -106,7 +106,7 @@ class RegistrationEntity
         global $pagenow;
         $action = (isset($_GET['action'])) ? $_GET['action'] : '';
 
-        if ($pagenow == 'wp-login.php' && (!$action || ($action && !in_array($action, array('logout', 'lostpassword', 'rp', 'resetpass'))))) {
+        if ($pagenow == 'wp-login.php' && (!$action || ($action && !in_array($action, array('logout', 'lostpassword', 'rp', 'resetpass', 'postpass'))))) {
             wp_redirect("/login");
             exit();
         }
