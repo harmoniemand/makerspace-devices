@@ -5,6 +5,8 @@ if (!defined('ABSPATH')) {
     die('-1');
 }
 
+require_once dirname(__FILE__) . "./../entities/presence_log.entity.php";
+
 class ReservationEntity
 {
 
@@ -100,40 +102,13 @@ class ReservationEntity
         return $ReturnString;
     }
 
-    public function get_visitors_between($from, $to) {
-        global $wpdb;
-
-        $sql = "SELECT mpl_id, COUNT(mpl_id) as count FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN %s AND %s GROUP BY mpl_user_id";
-       
-        $entries = $wpdb->get_results($wpdb->prepare(
-            $sql,
-            $from->format("Y-m-d H:i:s"),
-            $to->format("Y-m-d H:i:s")
-        ));
-    }
-
-    // returns log-count per visitor for a given date
-    public function get_visitors_by_day($date)  {
-        $day_start = ($date->setTime(0, 0, 0));
-        $day_end = ($date->setTime(23, 59, 59));
-
-        return $this->get_visitors_between($day_start, $day_end);
-    }
-
-    // returns count of present visitors 
-    public function shortcode_visitor_count($atts)
+    public function api_get_present_at($attr)
     {
-        $entries = $this->get_visitors_by_day(get_datetime());
-        return $entries;
+        $end = isset($_GET["end"]) ? new DateTime($_GET["end"]) : get_datetime();
 
-        $count = 0;
-        foreach ($entries as $e) {
-            if ($e->count % 2 == 1) {
-                $count++;
-            }
-        }
-
-        return $count;
+        return (object) array(
+            "content" => PresenceLogEntity::get_visitors_present_at($end)
+        );
     }
 
     public function api_get_reservation_presence_count($data)
@@ -146,15 +121,15 @@ class ReservationEntity
         }
 
         return (object) array(
-            "count" => $this->shortcode_visitor_count(null)
+            "count" => PresenceLogEntity::shortcode_visitor_count(null)
         );
     }
-    
+
     public function api_get_reservation_presence_count_sum($data)
     {
         return $_GET;
 
-        $entries = $this->get_visitors_by_day(get_datetime());
+        $entries = PresenceLogEntity::get_visitors_by_day(get_datetime());
         return $entries;
     }
 
@@ -169,6 +144,11 @@ class ReservationEntity
         register_rest_route('makerspace/v1', '/presence/sum', array(
             'methods' => 'GET',
             'callback' => array($this, 'api_get_reservation_presence_count_sum'),
+        ));
+
+        register_rest_route('makerspace/v1', '/presence/at', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'api_get_present_at'),
         ));
     }
 
@@ -210,32 +190,6 @@ class ReservationEntity
 
     public function activate()
     {
-        global $wpdb;
-
-        $sql = "
-                CREATE TABLE IF NOT EXISTS makerspace_advance_registrations (
-                mar_registration_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                mar_user_id  bigint(20) NOT NULL,
-                mar_from INT NOT NULL,
-                mar_to INT NOT NULL,
-                mar_approved_by INT,
-                mar_deleted INT,
-                mar_term_id bigint(20),
-                mse_device_message TEXT
-                )
-            ";
-
-        $wpdb->get_results($sql);
-
-
-        $sql = "
-                CREATE TABLE IF NOT EXISTS makerspace_presence_logs (
-                mpl_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                mpl_user_id  bigint(20) NOT NULL,
-                mpl_datetime datetime NOT NULL
-                )
-            ";
-
-        $wpdb->get_results($sql);
+        PresenceLogEntity::create_database_tables();
     }
 }
