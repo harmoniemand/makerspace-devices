@@ -50,6 +50,10 @@ class ReservationEntity
         require dirname(__FILE__) . '/partials/reservation-pos.controller.php';
         // require dirname(__FILE__) . '/partials/reservation-timeline.partial.php';
     }
+    public function renderSubmenuReservationLogs()
+    {
+        require dirname(__FILE__) . '/reservation-logs/reservation-logs.controller.php';
+    }
 
     public function registerAdminMenu()
     {
@@ -90,6 +94,18 @@ class ReservationEntity
             "edit_others_posts",
             $submenu_slug,
             array($this, "renderSubmenuReservationPOS")
+        );
+
+        $subpage_title = 'Logs';
+        $submenu_title = 'Logs';
+        $submenu_slug = 'reservations-logs';
+        add_submenu_page(
+            $menu_slug,
+            $subpage_title,
+            $submenu_title,
+            "edit_others_posts",
+            $submenu_slug,
+            array($this, "renderSubmenuReservationLogs")
         );
     }
 
