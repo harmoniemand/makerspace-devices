@@ -64,8 +64,33 @@
             <thead>
                 <tr>
                     <th scope="col" id="title" class="manage-column column-title column-primary sortable desc">
-                        <a href="/wp-admin/edit.php?post_type=page&amp;orderby=title&amp;order=asc">
-                            <span>Name</span><span class="sorting-indicator"></span>
+                        <?php
+                        $d = (clone $url_data);
+                        $d->orderby = "first_name";
+                        $url = http_build_query($d);
+                        ?>
+                        <a href="?<?php echo $url ?>">
+                            <span>Vorname</span><span class="sorting-indicator"></span>
+                        </a>
+                    </th>
+                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc">
+                        <?php
+                        $d = (clone $url_data);
+                        $d->orderby = "last_name";
+                        $url = http_build_query($d);
+                        ?>
+                        <a href="?<?php echo $url ?>">
+                            <span>Nachname</span><span class="sorting-indicator"></span>
+                        </a>
+                    </th>
+                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc">
+                        <?php
+                        $d = (clone $url_data);
+                        $d->orderby = "user_name";
+                        $url = http_build_query($d);
+                        ?>
+                        <a href="?<?php echo $url ?>">
+                            <span>Username</span><span class="sorting-indicator"></span>
                         </a>
                     </th>
                     <th scope="col" id="author" class="manage-column column-author">Von - Bis</th>
@@ -113,15 +138,23 @@
 
                         <td class="title column-title has-row-actions column-primary page-title" data-colname="Titel">
                             <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
-                            <strong>
-                                <a class="row-title" href="/wp-admin/user-edit.php?user_id=<?php echo $r->mar_user_id ?>" aria-label="„Aktuell befinden sich“ (Bearbeiten)">
-                                    <?php echo $r_user->user_firstname ?>
-                                    <?php echo $r_user->user_lastname  ?>
-                                    (<?php echo $r_user->user_login  ?>)
-                                </a>
-                            </strong>
+                            <?php echo $r_user->user_firstname ?>
 
                             <!-- <div class="row-actions"><span class="edit"><a href="/wp-admin/post.php?post=3222&amp;action=edit" aria-label="„Aktuell befinden sich“ bearbeiten">Bearbeiten</a> | </span><span class="inline hide-if-no-js"><button type="button" class="button-link editinline" aria-label="Schnellanpassung für „Aktuell befinden sich“ (inline)" aria-expanded="false">QuickEdit</button> | </span><span class="trash"><a href="/wp-admin/post.php?post=3222&amp;action=trash&amp;_wpnonce=378bf7b306" class="submitdelete" aria-label="„Aktuell befinden sich“ in den Papierkorb verschieben">Papierkorb</a> | </span><span class="view"><a href="/ds-corona-anwesende/" rel="bookmark" aria-label="„Aktuell befinden sich“ ansehen">Anschauen</a></span></div><button type="button" class="toggle-row"><span class="screen-reader-text">Mehr Details anzeigen</span></button> -->
+                        </td>
+                        <td class="title column-title has-row-actions column-primary page-title" data-colname="Titel">
+                            <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
+                            <?php echo $r_user->user_lastname  ?>
+
+                            <!-- <div class="row-actions"><span class="edit"><a href="/wp-admin/post.php?post=3222&amp;action=edit" aria-label="„Aktuell befinden sich“ bearbeiten">Bearbeiten</a> | </span><span class="inline hide-if-no-js"><button type="button" class="button-link editinline" aria-label="Schnellanpassung für „Aktuell befinden sich“ (inline)" aria-expanded="false">QuickEdit</button> | </span><span class="trash"><a href="/wp-admin/post.php?post=3222&amp;action=trash&amp;_wpnonce=378bf7b306" class="submitdelete" aria-label="„Aktuell befinden sich“ in den Papierkorb verschieben">Papierkorb</a> | </span><span class="view"><a href="/ds-corona-anwesende/" rel="bookmark" aria-label="„Aktuell befinden sich“ ansehen">Anschauen</a></span></div><button type="button" class="toggle-row"><span class="screen-reader-text">Mehr Details anzeigen</span></button> -->
+                        </td>
+                        <td class="title column-title has-row-actions column-primary page-title" data-colname="Titel">
+                            <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
+                            <strong>
+                                <a class="row-title" href="/wp-admin/user-edit.php?user_id=<?php echo $r->mar_user_id ?>" aria-label="„Aktuell befinden sich“ (Bearbeiten)">
+                                    <?php echo $r_user->user_login  ?>
+                                </a>
+                            </strong>
                         </td>
                         <td class="author column-author" data-colname="Autor">
                             <span class=""><?php echo $r_from->format('H:i') ?></span>
@@ -178,15 +211,31 @@
 
             <tfoot>
                 <tr>
-                    <th scope="col" class="manage-column column-title column-primary sortable desc"><a href="/wp-admin/edit.php?post_type=page&amp;orderby=title&amp;order=asc"><span>Titel</span><span class="sorting-indicator"></span></a></th>
-                    <th scope="col" class="manage-column column-author">Autor</th>
+                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc">
+                        <a href="/wp-admin/edit.php?post_type=page&amp;orderby=title&amp;order=asc">
+                            <span>Vorname</span><span class="sorting-indicator"></span>
+                        </a>
+                    </th>
+                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc">
+                        <a href="/wp-admin/edit.php?post_type=page&amp;orderby=title&amp;order=asc">
+                            <span>Nachname</span><span class="sorting-indicator"></span>
+                        </a>
+                    </th>
+                    <th scope="col" id="title" class="manage-column column-title column-primary sortable desc">
+                        <a href="/wp-admin/edit.php?post_type=page&amp;orderby=title&amp;order=asc">
+                            <span>Username</span><span class="sorting-indicator"></span>
+                        </a>
+                    </th>
+                    <th scope="col" id="author" class="manage-column column-author">Von - Bis</th>
                     <th scope="col" id="security_instructions" class="manage-column column-comments num sortable desc">
                         <?php echo __("SU") ?>
                     </th>
                     <th scope="col" id="address" class="manage-column column-comments num sortable desc">
                         <?php echo __("Anschrift") ?>
                     </th>
-                    <th scope="col" class="manage-column column-date sortable asc"><a href="/wp-admin/edit.php?post_type=page&amp;orderby=date&amp;order=desc"><span>Datum</span><span class="sorting-indicator"></span></a></th>
+                    <th scope="col" id="date" class="manage-column column-date sortable asc">
+                        <?php echo __("Aktionen") ?>
+                    </th>
                 </tr>
             </tfoot>
 

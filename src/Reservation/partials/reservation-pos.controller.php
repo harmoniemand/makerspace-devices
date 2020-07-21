@@ -10,7 +10,7 @@ $url_data = (object) array(
     'tab' => isset($_GET["tab"]) ? $_GET["tab"] : "reserved",
     'page' => $_GET["page"],
     'offset' => isset($_GET["offset"]) ? $_GET["offset"] : 0,
-
+    'orderby' => "first_name"
 );
 
 $today = get_datetime();
@@ -52,67 +52,69 @@ if (isset($_POST["ms_user_corona_adress"])) {
     }
 }
 
+$sql_reservations = "";
+$orderby = sanitize_sql_orderby( empty($_GET["orderby"]) ? $url_data->orderby : $_GET["orderby"] );
 
 if ($url_data->tab != "all") {
 
     $sql_reservations = "
-        SELECT mar_user_id, MIN(mar_from) as mar_from, MAX(mar_to) as mar_to 
-        FROM `makerspace_advance_registrations` 
-        WHERE mar_from > %d AND mar_to < %d AND mar_deleted = 0 GROUP BY mar_user_id
+
+    SELECT
+        mar_user_id,
+        mar_from, 
+        mar_to,
+        t_first_name.meta_value as first_name,
+        t_last_name.meta_value as last_name,
+        wp_users.user_login as user_name
+    FROM (
+        SELECT 
+            mar_user_id,
+            MIN(mar_from) as mar_from, 
+            MAX(mar_to) as mar_to
+        FROM `makerspace_advance_registrations`
+        WHERE mar_from > %d AND mar_to < %d AND mar_deleted = 0
+        GROUP BY mar_user_id
+    ) as tmp
+
+    LEFT JOIN wp_users ON wp_users.ID = mar_user_id
+    LEFT JOIN wp_usermeta as t_first_name ON t_first_name.user_id = mar_user_id AND t_first_name.meta_key = 'first_name'
+    LEFT JOIN wp_usermeta as t_last_name ON t_last_name.user_id = mar_user_id AND t_last_name.meta_key = 'last_name'
+
+    ORDER BY $orderby
     ";
 
-    $reservations = $wpdb->get_results($wpdb->prepare(
+    $sql_reservations = $wpdb->prepare(
         $sql_reservations,
         $day->start->getTimestamp(),
         $day->end->getTimestamp()
-    ));
-
-    $day->count = count($reservations);
-
-    for ($hour = 15; $hour < 22; $hour++) {
-        $hour_count = 0;
-        $hour_timestamp_begin = (clone $day->date->setTime($hour, 0, 0))->getTimestamp();
-        $hour_timestamp_end = (clone $day->date->setTime($hour, 59, 59))->getTimestamp();
-
-        foreach ($reservations as $r) {
-            if ($r->mar_from <= $hour_timestamp_begin && $r->mar_to >= $hour_timestamp_end) {
-                $hour_count++;
-            }
-        }
-
-        $sql_rvp = "SELECT * FROM makerspace_advance_registrations WHERE mar_from = %d AND mar_user_id = %d";
-        $rvp = $wpdb->get_row($wpdb->prepare($sql_rvp, $hour_timestamp_begin, get_current_user_id()));
-
-        $h = (object) array(
-            "hour" => $hour,
-            "count" => $hour_count,
-            "start" => $hour_timestamp_begin,
-            "end" => $hour_timestamp_end,
-            "color" => $hour_count < $visitor_limit ? "rgb(161, 198, 57)" :  "#e40033",
-            "reserved" => $rvp == null || $rvp->mar_deleted > 0 ? false : true
-        );
-
-        array_push($day->hours, $h);
-    }
-
-    usort($reservations, function ($a, $b) {
-        if (isset($a->start) && isset($b->start)) {
-            return $a->start - $b->start;
-        } else {
-            return 0;
-        }
-    });
+    );
 } else {
-    $users = get_users();
+    $sql_reservations = "
+    SELECT
+        wp_users.ID as mar_user_id,
+        0 as mar_from, 
+        0 as mar_to,
+        t_first_name.meta_value as first_name,
+        t_last_name.meta_value as last_name,
+        wp_users.user_login as user_name
+    FROM wp_users
+    
+    LEFT JOIN wp_usermeta as t_first_name ON t_first_name.user_id = wp_users.ID AND t_first_name.meta_key = 'first_name'
+    LEFT JOIN wp_usermeta as t_last_name ON t_last_name.user_id = wp_users.ID AND t_last_name.meta_key = 'last_name'
 
-    foreach ($users as $user) {
-        array_push( $reservations, (object) array(
-            "mar_user_id" => $user->ID,
-            "mar_from" => 0,
-            "mar_to" => 0
-        ));
-    }
+    ORDER BY $orderby
+    ";
+
+    $sql_reservations = $wpdb->prepare(
+        $sql_reservations
+    );
 }
+
+$reservations = $wpdb->get_results($sql_reservations);
+
+
+
+
 
 if ($_GET["page"] == "reservations-timeline") {
     require dirname(__FILE__) . "/reservation-timeline.partial.php";
