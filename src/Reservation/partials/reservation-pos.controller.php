@@ -128,7 +128,7 @@ SELECT count(*) as count FROM (
         mpl_datetime between %s AND %s
     GROUP BY mpl_user_id
     ) as tmp
-    WHERE log_count = 0
+    WHERE log_count > 0
 ";
 
 $logged_in_count = $wpdb->get_var( $wpdb->prepare(
