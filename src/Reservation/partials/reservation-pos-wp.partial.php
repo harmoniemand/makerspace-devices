@@ -1,8 +1,16 @@
 <div class="wrap">
-    <h1 class="wp-heading-inline">Reservierungen - POS</h1>
+
+    <div class="d-flex justify-content-between">
+        <h1 class="wp-heading-inline">Reservierungen - POS</h1>
+
+        <h1 class="wp-heading-inline">
+            Aktuell befinden sich <?php echo $logged_in_count ?> Personen im Maker Space
+        </h1>
+    </div>
 
     <!-- <a href="/wp-admin/post-new.php?post_type=page" class="page-title-action">Erstellen</a> -->
     <hr class="wp-header-end">
+
 
 
     <h2 class="screen-reader-text">Seitenliste filtern</h2>

@@ -116,6 +116,31 @@ $reservations = $wpdb->get_results($sql_reservations);
 
 
 
+$logged_in_sql = "
+SELECT count(*) as count FROM (
+	SELECT 
+        mpl_user_id,
+        MOD(COUNT(mpl_user_id), 2) as log_count,
+        MIN(mpl_datetime) as arrived_at,
+        MAX(mpl_datetime) as leaved_at
+    FROM `makerspace_presence_logs`
+    WHERE 
+        mpl_datetime between %s AND %s
+    GROUP BY mpl_user_id
+    ) as tmp
+    WHERE log_count = 0
+";
+
+$logged_in_count = $wpdb->get_var( $wpdb->prepare(
+    $logged_in_sql,
+    $day->start->format("Y-m-d H:i:s"),
+    $day->end->format("Y-m-d H:i:s")
+));
+
+
+
+
+
 if ($_GET["page"] == "reservations-timeline") {
     require dirname(__FILE__) . "/reservation-timeline.partial.php";
 } else {
