@@ -63,13 +63,17 @@ if (!class_exists('MS_Devices_Main')) {
 			$registrationEntity = RegistrationEntity::instance();
 			$registrationEntity->register();
 
-			// require_once plugin_dir_path(__FILE__) . '/MyAccount/my-account.main.php';
-			// $myAccountMain = new MyAccountMain();
-			// $myAccountMain->register();
+			require_once plugin_dir_path(__FILE__) . '/MyAccount/my-account.main.php';
+			$myAccountMain = new MyAccountMain();
+			$myAccountMain->register();
 
 			require_once plugin_dir_path(__FILE__) . '/Devices/devices.posttype.php';
 			$devicePosttype = new DevicesPosttype();
 			$devicePosttype->register();
+
+			// require_once plugin_dir_path(__FILE__) . '/SecurityInstructions/security-instructions.posttype.php';
+			// $securityInstructionPosttype = new SecurityInstructionPosttype();
+			// $securityInstructionPosttype->register();
 
 			require_once dirname(__FILE__) . '/Reservation/reservation.entity.php';
 			$reservation = ReservationEntity::instance();
@@ -116,10 +120,14 @@ if (!class_exists('MS_Devices_Main')) {
 
 		public static function activate()
 		{
-
 			require_once dirname(__FILE__) . '/Reservation/reservation.entity.php';
 			$reservation = ReservationEntity::instance();
 			$reservation->activate();
+
+			
+			require_once dirname(__FILE__) . '/Workshops/workshop.posttype.php';
+			$workshopPostType = WorkshopPostType::instance();
+			$workshopPostType->activate();
 		}
 
 		public static function deactivate($network_deactivating)

@@ -29,6 +29,21 @@ class WorkshopPostType
     }
 
 
+    public function render_shortcode_workshops_list($atts)
+    {
+        ob_start();
+        require dirname(__FILE__) . '/partials/shortcode-workshops-list.partial.php';
+        $ReturnString = ob_get_contents();
+        ob_end_clean();
+        return $ReturnString;
+    }
+
+    public function register_shortcodes()
+    {
+        add_shortcode('makerspace_workshops_list', array($this, "render_shortcode_workshops_list"));
+    }
+
+
     public function metabox_date_template()
     {
         require(plugin_dir_path(__FILE__) . 'partials/metabox-date.php');
@@ -209,8 +224,30 @@ class WorkshopPostType
         add_filter('manage_posts_columns', array($this, 'list_columns_head'));
         add_action('manage_posts_custom_column',  array($this, 'list_columns_content'), 10, 2);
 
+        add_action('init', array($this, 'register_Shortcodes'));
 
         // subpages
         add_action('admin_menu', array($this, 'add_menu'));
+    }
+
+    public function activate() {
+        global $wpdb;
+
+        $sql = "
+            CREATE TABLE IF NOT EXISTS makerspace_calendar_workshop_registrations (
+              mse_cal_workshop_registration_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+              mse_cal_workshop_post_id INT NOT NULL,
+              mse_cal_workshop_registration_email VARCHAR(255) NOT NULL,
+              mse_cal_workshop_registration_firstname VARCHAR(255) NOT NULL,
+              mse_cal_workshop_registration_lastname VARCHAR(255) NOT NULL,
+              mse_cal_workshop_registration_count INT NOT NULL
+            )
+        ";
+
+        $wpdb->get_results( $sql );
+    }
+
+    public function deactivate( $network_deactivating ) {
+
     }
 }

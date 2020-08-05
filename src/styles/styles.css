@@ -91,3 +91,14 @@
 .card.wp-settings {
   max-width: 100% !important;
 }
+
+
+#metabox_gfbu_list .inside {
+  padding: 0;
+}
+
+
+#metabox_gfbu_list .inside table {
+  border-left: 0;
+  border-right: 0;
+}

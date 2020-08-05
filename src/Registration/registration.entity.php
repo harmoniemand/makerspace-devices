@@ -43,11 +43,18 @@ class RegistrationEntity
         ob_end_clean();
         return $ReturnString;
     }
-
     public function render_shortcode_login($atts)
     {
         ob_start();
         require dirname(__FILE__) . '/partials/shortcode-login.partial.php';
+        $ReturnString = ob_get_contents();
+        ob_end_clean();
+        return $ReturnString;
+    }
+    public function render_shortcode_reset_password($atts)
+    {
+        ob_start();
+        require dirname(__FILE__) . '/partials/shortcode-reset-password.partial.php';
         $ReturnString = ob_get_contents();
         ob_end_clean();
         return $ReturnString;
@@ -57,6 +64,7 @@ class RegistrationEntity
     {
         add_shortcode('makerspace_registration', array($this, "render_shortcode_registration"));
         add_shortcode('makerspace_login', array($this, "render_shortcode_login"));
+        add_shortcode('makerspace_reset_password', array($this, "render_shortcode_reset_password"));
     }
 
     public function load_styles()

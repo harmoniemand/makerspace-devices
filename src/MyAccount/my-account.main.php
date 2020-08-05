@@ -64,19 +64,19 @@ class MyAccountMain
             2
         );
 
-        $subpage_title_device_license = __('Sicherheitsunterweisungen');
-        $submenu_slug_device_license  = 'my_device_licenses';
-        add_submenu_page(
-            $menu_slug,
-            $subpage_title_device_license,
-            $subpage_title_device_license,
-            $capability,
-            $submenu_slug_device_license,
-            array($this, "renderSubmenuDeviceLicenses")
-        );
+        // $subpage_title_device_license = __('Sicherheitsunterweisungen');
+        // $submenu_slug_device_license  = 'my_device_licenses';
+        // add_submenu_page(
+        //     $menu_slug,
+        //     $subpage_title_device_license,
+        //     $subpage_title_device_license,
+        //     $capability,
+        //     $submenu_slug_device_license,
+        //     array($this, "renderSubmenuDeviceLicenses")
+        // );
 
-        $subpage_title = __('Mein Einstellungen');
-        $submenu_title = __('Mein Einstellungen');
+        $subpage_title = __('Meine Einstellungen');
+        $submenu_title = __('Meine Einstellungen');
         $submenu_slug = 'my-settings';
         add_submenu_page(
             $menu_slug,
@@ -86,6 +86,23 @@ class MyAccountMain
             $submenu_slug,
             array($this, "renderSubmenuMySettings")
         );
+
+        // if ( !current_user_can( "add_users" ) ){
+        //     remove_menu_page( 'users.php' );                  //Users
+        //     remove_menu_page( 'profile.php' );                  //Users
+        // }
+
+    }
+
+
+    public function prevent_user_profile() {
+        // global $pagenow;
+        // $action = (isset($_GET['action'])) ? $_GET['action'] : '';
+
+        // if ($pagenow == 'profile.php' ) {
+        //     wp_redirect("/wp-admin/admin.php?page=my_data");
+        //     exit();
+        // }
     }
 
 
@@ -96,8 +113,10 @@ class MyAccountMain
 
     public function register()
     {
+        add_action('init', array($this, 'prevent_user_profile'));
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));
+
     }
 
     public function activate()

@@ -5,14 +5,42 @@ if (!defined('ABSPATH')) {
     die('-1');
 }
 
-class DevicesPosttype
+class SecurityInstructionPosttype
 {
+    
+
+    private $slug;
+    private $labels;
+
+    protected static $instance;
+
+    public static function instance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self;
+        }
+        return self::$instance;
+    }
+
+    public function __construct()
+    {
+        $this->slug = "securityinstructions";
+
+        $this->labels = array(
+            'name'          => __('SUs und BAs'),
+            'singular_name' => __('SU'),
+            'edit_item'     => __('SU bearbeiten'),
+        );
+    }
+
+
+
 
 
     public function ST4_columns_head($defaults)
     {
         $post = get_post($post_ID);
-        if ($post && get_post_type($post) == 'devices') {
+        if ($post && get_post_type($post) == 'securityinstructions') {
             $defaults['betriebsanweisung_attachment_id'] = 'Betriebsanweisung';
         }
         return $defaults;
@@ -22,7 +50,7 @@ class DevicesPosttype
     public function ST4_columns_content($column_name, $post_ID)
     {
         $post = get_post($post_ID);
-        if ($post && get_post_type($post) == 'devices') {
+        if ($post && get_post_type($post) == 'securityinstructions') {
             if ($column_name == 'betriebsanweisung_attachment_id') {
                 $betriebsanweisung_attachment_id = get_post_meta($post->ID, 'betriebsanweisung_attachment_id', true);
 
@@ -71,54 +99,85 @@ class DevicesPosttype
 
     public function register_taxonnomies()
     {
-        $labels = array(
-            'name' => _x('Wertstätten', 'taxonomy general name'),
-            'singular_name' => _x('Werkstatt', 'taxonomy singular name'),
-            'search_items' =>  __('Werkstatt suchen'),
-            'all_items' => __('Alle Werkstätten'),
-            'parent_item' => __('Übergeordnete Werkstatt'),
-            'parent_item_colon' => __('Übergeordnete Werkstatt:'),
-            'edit_item' => __('Werkstatt bearbeiten'),
-            'update_item' => __('Werkstatt ändern'),
-            'add_new_item' => __('Neue Werkstatt'),
-            'new_item_name' => __('Name der Werkstatt'),
-            'menu_name' => __('Werkstätten'),
-        );
-
-        // Now register the taxonomy
-
-        register_taxonomy('ms_devices_workshop', array('devices'), array(
-            'hierarchical' => true,
-            'labels' => $labels,
-            'show_ui' => true,
-            'show_admin_column' => true,
-            'query_var' => true,
-            'rewrite' => array('slug' => 'ms_devices_workshop'),
-        ));
+        
     }
 
 
     public function register_posttype()
     {
-
-        $labels = array(
-            'name'          => __('Geräte'),
-            'singular_name' => __('Gerät'),
-            'edit_item'     => __('Gerät bearbeiten'),
-        );
-
         $args = array(
-            'labels'      => $labels,
+            'labels'      => $this->labels,
             'public'      => true,
             'has_archive' => true,
             'menu_icon'   => plugin_dir_url(MSM_FILE) . '/src/menu-icon.png',
-            // 'show_in_rest' => true,
-            'supports'    => array('title', 'editor', 'author', 'thumbnail', 'custom-fields', 'excerpt',/* 'comments', 'custom-fields', 'revisions'*/),
-            'taxonomies'  => array('ms_devices_workshop', 'category', 'post_tag'),
+            'show_in_rest' => true,
+            'supports'    => array('title', 'revisions', /*'editor', 'author', 'thumbnail',  'excerpt', 'comments', 'custom-fields', 'revisions'*/),
+            // 'taxonomies'  => array('category', 'post_tag'),
             // 'capabilities' => array( 'publish_posts' )
         );
 
-        register_post_type('devices', $args);
+        register_post_type($this->slug, $args);
+    }
+
+    public function render_metabox_general_infos()
+    {
+        require(plugin_dir_path(__FILE__) . 'partials/metabox-general-infos.php');
+    }
+    public function render_metabox_gfbu_list()
+    {
+        require(plugin_dir_path(__FILE__) . 'partials/metabox-gfbu-list.php');
+    }
+    
+
+    public function add_metaboxes()
+    {
+
+        add_meta_box(
+            'metabox_general_infos',
+            __('Allgemeine Informationen'),
+            array($this, 'render_metabox_general_infos'),
+            $this->slug,
+            'normal',
+            'default'
+        );
+        
+        add_meta_box(
+            'metabox_gfbu_list',
+            __('Dokumente'),
+            array($this, 'render_metabox_gfbu_list'),
+            $this->slug,
+            'normal',
+            'default'
+        );
+    }
+    public function save_custom_meta_box()
+    {
+        if (!isset($_POST["post_ID"]))
+            return;
+
+        $pid = $_POST["post_ID"];
+
+        if ($pid == NULL)
+            return;
+
+
+        if (!current_user_can("edit_post", $pid)) {
+            return $pid;
+        }
+
+        if (defined("DOING_AUTOSAVE") && DOING_AUTOSAVE) {
+            return $pid;
+        }
+
+        // print_r($_POST);
+
+        if(isset($_POST["security_instruction_device_id"])) {
+            update_post_meta(
+                $pid,
+                "security_instruction_device_id",
+                $_POST["security_instruction_device_id"]
+            );
+        }
     }
 
     public function register()
@@ -127,12 +186,12 @@ class DevicesPosttype
         add_filter('manage_posts_columns', array($this, 'ST4_columns_head'));
         add_action('manage_posts_custom_column',  array($this, 'ST4_columns_content'), 10, 2);
 
-        add_action('init', array($this, 'register_taxonnomies'));
+        // add_action('init', array($this, 'register_taxonnomies'));
         add_action('init', array($this, 'register_posttype'));
         // add_action( 'init', array( $this, 'add_caps') );
 
-        // add_action( 'add_meta_boxes', array( $this, 'add_metaboxes' ) );
-        // add_action( 'init', array( $this, 'save_custom_meta_box') );
+        add_action( 'add_meta_boxes', array( $this, 'add_metaboxes' ) );
+        add_action( 'init', array( $this, 'save_custom_meta_box') );
 
         // add_filter('manage_workshop_columns', array($this, 'list_columns_head'));
         // add_action('manage_posts_custom_column',  array($this, 'list_columns_content'), 10, 2);

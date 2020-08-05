@@ -45,8 +45,8 @@ class SettingsEntity
         $menu_slug  = 'options-general.php';
         $capability = 'add_users';
 
-        $subpage_title = 'MS-Settings';
-        $submenu_title = 'MS-Settings';
+        $subpage_title = 'Maker Space';
+        $submenu_title = 'Maker Space';
         $submenu_slug = 'ms_settings';
         add_submenu_page(
             $menu_slug,
