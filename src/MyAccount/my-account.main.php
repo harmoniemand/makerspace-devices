@@ -87,22 +87,22 @@ class MyAccountMain
             array($this, "renderSubmenuMySettings")
         );
 
-        // if ( !current_user_can( "add_users" ) ){
-        //     remove_menu_page( 'users.php' );                  //Users
-        //     remove_menu_page( 'profile.php' );                  //Users
-        // }
+        if ( !current_user_can( "add_users" ) ){
+            remove_menu_page( 'users.php' );                  //Users
+            remove_menu_page( 'profile.php' );                  //Users
+        }
 
     }
 
 
     public function prevent_user_profile() {
-        // global $pagenow;
-        // $action = (isset($_GET['action'])) ? $_GET['action'] : '';
+        global $pagenow;
+        $action = (isset($_GET['action'])) ? $_GET['action'] : '';
 
-        // if ($pagenow == 'profile.php' ) {
-        //     wp_redirect("/wp-admin/admin.php?page=my_data");
-        //     exit();
-        // }
+        if ($pagenow == 'profile.php' ) {
+            wp_redirect("/wp-admin/admin.php?page=my_data");
+            exit();
+        }
     }
 
 
