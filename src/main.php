@@ -82,6 +82,10 @@ if (!class_exists('MS_Devices_Main')) {
 			require_once dirname(__FILE__) . '/Workshops/workshop.posttype.php';
 			$workshopPostType = WorkshopPostType::instance();
 			$workshopPostType->register();
+
+			require_once dirname(__FILE__) . '/Nextcloud/nextcloud.controller.php';
+			$nextcloudController = NextcloudController::instance();
+			$nextcloudController->register();
 		}
 
 		public function load_styles()
