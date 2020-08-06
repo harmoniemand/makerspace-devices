@@ -39,8 +39,6 @@ class LdapHelper
     {
         if ($this->connection) {
 
-            print_r( $this );
-
             $this->binding = ldap_bind(
                 $this->connection,
                 $this->admin,
