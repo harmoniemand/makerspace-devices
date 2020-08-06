@@ -2,7 +2,6 @@
 
 global $wpdb;
 
-
 $events = get_posts(array(
     'post_type'         => 'workshop',
     'posts_per_page'    =>  -1,

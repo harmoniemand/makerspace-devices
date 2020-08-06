@@ -1,58 +1,50 @@
 <?php
 
+require_once dirname(__FILE__) . "/../../Helper/LdapHelper.php";
+
 $error = false;
 $success = false;
 $debug = true;
 
-if(isset($_POST["makerspace-user-password"])):
+
+
+if (isset($_POST["my-account-change-password-nonce"])) :
 
     if ($_POST["makerspace-user-password-repeat"] != $_POST["makerspace-user-password"]) {
         $error = "Das neue Passwort wurde nicht korrekt wiederholt.";
     }
 
-    if (!$error):
+    if (!$error) :
         $oldPW = "{MD5}" . base64_encode(pack("H*", md5($_POST["makerspace-old-password"])));
         $newPW = $_POST["makerspace-user-password"];
 
         $user = wp_get_current_user();
 
-        $ldap['server'] =       get_option("makerspace_ldap_server");
-        $ldap['port'] =         get_option("makerspace_ldap_port");
-        $ldap['admin'] =        get_option("makerspace_ldap_admin");
-        $ldap['admin_pass'] =   get_option("makerspace_ldap_admin_pass");
-        $ldap['user_ou'] =      get_option("makerspace_ldap_user_ou");
+        $ldap = new LdapHelper();
 
-        $ldap['connection'] = ldap_connect( $ldap['server'], $ldap['port'] );
-        ldap_set_option($ldap['connection'], LDAP_OPT_PROTOCOL_VERSION, 3);
+        if ($ldap->binding) :
 
-        if ($ldap['connection']):
-            $ldap_binding = ldap_bind( $ldap['connection'], $ldap['admin'], $ldap['admin_pass'] )  or die ("Error trying to bind: ".ldap_error($ldap['connection']));
+            $search = ldap_search($ldap->connection, $ldap->user_ou, "(cn=" . $user->user_login . ")");
+            $ldapentry = ldap_first_entry($ldap->connection, $search);
 
-            if ($ldap_binding):
-                $search = ldap_search($ldap['connection'], $ldap['user_ou'], "(cn=".$user->user_login .")");
-                $ldapentry = ldap_first_entry ($ldap['connection'], $search);
+            $dn = 'cn=' . $user->user_login . ',' . $ldap->user_ou;
+            $r = ldap_compare($ldap->connection, $dn, 'userPassword', $oldPW);
 
-                $dn = 'cn=' . $user->user_login . ',' . $ldap['user_ou'];
+            if ($r === -1) {
+                $error = ldap_error($ds);
+            } elseif ($r === true) {
+                $entry = array('userPassword' => "{MD5}" . base64_encode(pack("H*", md5($newPW))));
 
-
-                $r=ldap_compare($ldap['connection'], $dn, 'userPassword',$oldPW);
-
-                if ($r === -1) {
-                    $error = ldap_error($ds);
-                } elseif ($r === true) {
-                    $entry = array('userPassword' => "{MD5}" . base64_encode(pack("H*", md5($newPW))));
-
-                    if (ldap_mod_replace($ldap['connection'], $dn, $entry)) {
-                        $success = true;
-                        add_user_meta( $user->ID, 'ms-should-change-password', "false", true );
-                    } else {
-                        $error = "Fehler beim Passwort setzten. (" . ldap_error($ldap['connection']) . ")";
-                    }
-                } elseif ($r === false) {
-                    $error = "Das aktuelle Passwort ist nicht korrekt.";
+                if (ldap_mod_replace($ldap->connection, $dn, $entry)) {
+                    $success = true;
+                    add_user_meta($user->ID, 'ms-should-change-password', "false", true);
+                } else {
+                    $error = "Fehler beim Passwort setzten. (" . ldap_error($ldap->connection) . ")";
                 }
+            } elseif ($r === false) {
+                $error = "Das aktuelle Passwort ist nicht korrekt.";
+            }
 
-            endif;
         endif;
     endif;
 endif;
@@ -62,7 +54,7 @@ endif;
 <h1 class="ms-side-headline">Passwort ändern</h1>
 
 
-<?php if ($error): ?>
+<?php if ($error) : ?>
     <div class="container-fluid">
         <div class="row">
             <div class="col">
@@ -76,7 +68,7 @@ endif;
     </div>
 <?php endif; ?>
 
-<?php if ($success): ?>
+<?php if ($success) : ?>
     <div class="container-fluid">
         <div class="row">
             <div class="col">
@@ -93,9 +85,9 @@ endif;
 
 
 
-<form method="post" action="/wp-admin/users.php?page=makerspace_change_user_password">
+<form method="post" action="/wp-admin/admin.php?page=my-password">
 
-    <?php wp_nonce_field( basename( __FILE__ ), 'metabox_devices_nonce' ); ?>
+    <?php wp_nonce_field(basename(__FILE__), 'my-account-change-password-nonce'); ?>
 
     <div class="container-fluid mt-5">
         <div class="row">
@@ -115,9 +107,6 @@ endif;
                         <input type="password" class="form-control" id="makerspace-user-password-repeat" name="makerspace-user-password-repeat" placeholder="Neues Password wiederholen" required>
                     </div>
                     <div class="d-flex">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                            Wie wähle ich ein sicheres Passwort?
-                        </button>
                         <button type="submit" class="ml-auto btn btn-primary">Speichern</button>
                     </div>
 
@@ -128,7 +117,7 @@ endif;
                 <p>
 
                 </p>
-                <div class="collapse" id="collapseExample">
+                <div class="" id="collapseExample">
                     <div class="card card-body" style="min-width: 100%; max-width: 100%;">
 
                         <h2>Was wird mit dem Passwort gesichert?</h2>
@@ -186,6 +175,6 @@ endif;
             </div>
 
         </div>
-</div>
+    </div>
 
 </form>

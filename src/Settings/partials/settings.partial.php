@@ -33,7 +33,7 @@ $makerspace_visitor_limit = get_option("makerspace_visitor_limit");
 
 
 
-<?php if (isset($save_form_settings_saved)) : ?>
+<?php if ($save_form_settings_saved) : ?>
     <div class="row mt-3" style="max-width: 100%;">
         <div class="col">
             <div class="alert alert-success" role="alert" style="padding: 8px 12px; width: 100%;">
