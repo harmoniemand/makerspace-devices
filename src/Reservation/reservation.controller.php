@@ -52,7 +52,7 @@ class ReservationEntity
     }
     public function renderSubmenuReservationLogs()
     {
-        require dirname(__FILE__) . '/reservation-logs/reservation-logs.controller.php';
+        require dirname(__FILE__) . '/partials/reservation-logs/reservation-logs.controller.php';
     }
 
     public function registerAdminMenu()
@@ -109,14 +109,7 @@ class ReservationEntity
         );
     }
 
-    public function shortcode_table($atts)
-    {
-        ob_start();
-        require dirname(__FILE__) . '/partials/shortcode-reservation-table.partial.php';
-        $ReturnString = ob_get_contents();
-        ob_end_clean();
-        return $ReturnString;
-    }
+    
 
     public function api_get_present_at($attr)
     {
@@ -169,10 +162,28 @@ class ReservationEntity
     }
 
 
+    public function shortcode_table($atts)
+    {
+        ob_start();
+        require dirname(__FILE__) . '/shortcodes/reservation-table.shortcode.php';
+        $ReturnString = ob_get_contents();
+        ob_end_clean();
+        return $ReturnString;
+    }
+    public function shortcode_log_contact($atts)
+    {
+        ob_start();
+        require dirname(__FILE__) . '/shortcodes/reservation-log.shortcode.php';
+        $ReturnString = ob_get_contents();
+        ob_end_clean();
+        return $ReturnString;
+    }
+
     public function register_shortcodes()
     {
         add_shortcode('registrations_table', array($this, "shortcode_table"));
-        add_shortcode('registrations_visitor_count', array($this, "shortcode_visitor_count"));
+        // add_shortcode('registrations_visitor_count', array($this, "shortcode_visitor_count"));
+        add_shortcode('ms_registrations_log_contact', array($this, "shortcode_log_contact"));
     }
 
     // Registrieren von Widgets

@@ -75,7 +75,7 @@ if (!class_exists('MS_Devices_Main')) {
 			// $securityInstructionPosttype = new SecurityInstructionPosttype();
 			// $securityInstructionPosttype->register();
 
-			require_once dirname(__FILE__) . '/Reservation/reservation.entity.php';
+			require_once dirname(__FILE__) . '/Reservation/reservation.controller.php';
 			$reservation = ReservationEntity::instance();
 			$reservation->register();
 
@@ -124,7 +124,7 @@ if (!class_exists('MS_Devices_Main')) {
 
 		public static function activate()
 		{
-			require_once dirname(__FILE__) . '/Reservation/reservation.entity.php';
+			require_once dirname(__FILE__) . '/Reservation/reservation.controller.php';
 			$reservation = ReservationEntity::instance();
 			$reservation->activate();
 

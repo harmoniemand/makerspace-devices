@@ -9,7 +9,8 @@ class PresenceLogEntity
 {
 
     // returns
-    public static function get_visitors_between($from, $to) {
+    public static function get_visitors_between($from, $to)
+    {
         global $wpdb;
 
         $sql = "
@@ -32,9 +33,10 @@ WHERE MOD(count, 2) > 0";
         return $count;
     }
 
-    
-    public static function get_visitors_present_at($datetime) {
-        $start =  (new DateTime($datetime->format("Y-m-d H:i:s")))->setTime(0,01);
+
+    public static function get_visitors_present_at($datetime)
+    {
+        $start =  (new DateTime($datetime->format("Y-m-d H:i:s")))->setTime(0, 01);
 
         return (object) array(
             "start" => $start->format("Y-m-d H:i:s"),
@@ -42,9 +44,10 @@ WHERE MOD(count, 2) > 0";
             "count" => PresenceLogEntity::get_visitors_between($start, $datetime)
         );
     }
-    
+
     // returns log-count per visitor for a given date
-    public static function get_visitors_by_day($date)  {
+    public static function get_visitors_by_day($date)
+    {
         $day_start = ($date->setTime(0, 0, 0));
         $day_end = ($date->setTime(23, 59, 59));
 
@@ -67,7 +70,8 @@ WHERE MOD(count, 2) > 0";
         return $count;
     }
 
-    public static function create_database_tables() {
+    public static function create_database_tables()
+    {
         global $wpdb;
 
         $sql = "
@@ -89,13 +93,25 @@ WHERE MOD(count, 2) > 0";
         $sql = "
                 CREATE TABLE IF NOT EXISTS makerspace_presence_logs (
                 mpl_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                mpl_user_id  bigint(20) NOT NULL,
+                mpl_user_id bigint(20) NOT NULL,
                 mpl_datetime datetime NOT NULL
                 )
             ";
 
         $wpdb->get_results($sql);
+
+
+        // $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_id VARCHAR(40)";
+        // $wpdb->get_results($sql);
+        
+        // $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_name VARCHAR(255);";
+        // $wpdb->get_results($sql);
+
+        // $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_address VARCHAR(255);";
+        // $wpdb->get_results($sql);
+
+        // $sql = "ALTER TABLE makerspace_presence_logs ALTER COLUMN mpl_user_id NULL;";
+        // $wpdb->get_results($sql);
+
     }
-
-
 }
