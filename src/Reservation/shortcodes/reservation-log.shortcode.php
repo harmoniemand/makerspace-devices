@@ -1,10 +1,28 @@
 <?php
 
+require_once dirname(__FILE__) . "/../../Helper/GuidHelper.php";
+
+global $wpdb;
+
 $error = "";
 $success = "";
 
 if (isset($_POST["makerspace_reservation_log_form_nonce"])) {
-    
+    $sql_mp_create_log = "
+    INSERT INTO makerspace_presence_logs (
+        mpl_temp_visitor_id, 
+        mpl_temp_visitor_name,
+        mpl_temp_visitor_address
+    ) values (%s, %s, %s)";
+
+    $wpdb->get_results($wpdb->prepare(
+        $sql_mp_create_log,
+        GuidHelper::GUID(),
+        $_POST["mse_mpl_name"],
+        $_POST["mse_mpl_city"] . " " . $_POST["mse_mpl_street"]
+    ));
+
+    $success = "Deine Kontaktdaten wurden hinterlegt und werden in 4 Wochen wieder automatisch gelöscht.";
 }
 
 ?>
@@ -24,6 +42,10 @@ if (isset($_POST["makerspace_reservation_log_form_nonce"])) {
         <?php echo $success ?>
     </div>
 
+    <div class="col-12">
+        <a href="<?php echo get_permalink(); ?>" class="btn btn-primary">Zurück zum Formular</a>
+    </div>
+
 <?php else : ?>
 
 
@@ -38,27 +60,27 @@ if (isset($_POST["makerspace_reservation_log_form_nonce"])) {
 
                 <div class="col-12 mt-3">
                     <div class="form-group row">
-                        <label for="mse_registration_first_name" class="col-sm-2 col-form-label">Name</label>
+                        <label for="mse_mpl_name" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="mse_registration_first_name" name="mse_registration_first_name" value="" placeholder="" required>
+                            <input type="text" class="form-control" id="mse_mpl_name" name="mse_mpl_name" value="" placeholder="" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <div class="form-group row">
-                        <label for="mse_registration_last_name" class="col-sm-2 col-form-label">Straße / Nr</label>
+                        <label for="mse_mpl_street" class="col-sm-2 col-form-label">Straße / Nr</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="mse_registration_last_name" name="mse_registration_last_name" value="" placeholder="" required>
+                            <input type="text" class="form-control" id="mse_mpl_street" name="mse_mpl_street" value="" placeholder="" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <div class="form-group row">
-                        <label for="mse_registration_last_name" class="col-sm-2 col-form-label"> PLZ / Stadt</label>
+                        <label for="mse_mpl_city" class="col-sm-2 col-form-label"> PLZ / Stadt</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="mse_registration_last_name" name="mse_registration_last_name" value="" placeholder="" required>
+                            <input type="text" class="form-control" id="mse_mpl_city" name="mse_mpl_city" value="" placeholder="" required>
                         </div>
                     </div>
                 </div>

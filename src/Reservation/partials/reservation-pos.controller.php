@@ -24,6 +24,16 @@ $day = (object) array(
     "hours" => array()
 );
 
+// create arrive / leave log for temp visitors
+if (isset($_POST["mpl_temp_visitor_id"])) {
+    $sql_mp_create_log = "INSERT INTO makerspace_presence_logs (mpl_temp_visitor_id, mpl_datetime) values (%s, %s)";
+    $wpdb->get_results($wpdb->prepare(
+        $sql_mp_create_log,
+        $_POST["mpl_temp_visitor_id"],
+        get_datetime()->format("Y-m-d H:i:s")
+    ));
+}
+
 // create arrive / leave log
 if (isset($_POST["mp_create_log"])) {
     $sql_mp_create_log = "INSERT INTO makerspace_presence_logs (mpl_user_id, mpl_datetime) values (%d, %s)";
@@ -111,6 +121,27 @@ if ($url_data->tab != "all") {
 }
 
 $reservations = $wpdb->get_results($sql_reservations);
+
+
+
+$sql_temp_visitors = "
+SELECT 
+    tmp.mpl_temp_visitor_id as mpl_temp_visitor_id, 
+    makerspace_presence_logs.mpl_temp_visitor_name as mpl_temp_visitor_name, 
+    makerspace_presence_logs.mpl_temp_visitor_address as temp_visitor_address
+FROM (
+    SELECT 
+    	mpl_temp_visitor_id, 
+    	count(mpl_id) as log_count 
+    FROM `makerspace_presence_logs`
+	WHERE mpl_temp_visitor_id IS NOT NULL
+    GROUP BY mpl_temp_visitor_id
+) as tmp
+JOIN makerspace_presence_logs ON makerspace_presence_logs.mpl_temp_visitor_id = tmp.mpl_temp_visitor_id
+WHERE MOD(tmp.log_count, 2) > 0
+";
+$temp_visitors = $wpdb->get_results($sql_temp_visitors);
+
 
 
 

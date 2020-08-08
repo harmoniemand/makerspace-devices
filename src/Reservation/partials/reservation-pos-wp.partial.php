@@ -116,6 +116,52 @@
 
             <tbody id="the-list">
 
+
+                <?php if (count($temp_visitors) > 0) : ?>
+                    <tr class="iedit author-self level-0 type-page status-publish hentry">
+
+                        <td class="title column-title has-row-actions column-primary page-title" data-colname="Vorname" colspan="7">
+                            <span style="font-weight: bold;">Temporäre Besuchende</span>
+                        </td>
+
+                    </tr>
+
+                    <?php foreach ($temp_visitors as $temp) : ?>
+
+
+                        <tr class="iedit author-self level-0 type-page status-publish hentry">
+
+                            <td class="title column-title has-row-actions column-primary page-title" data-colname="Vorname" colspan="6">
+                                <span>
+                                    <?php echo $temp->mpl_temp_visitor_name ?>
+                                    <?php echo $temp->temp_visitor_address ?>
+                                </span>
+                            </td>
+
+
+
+                            <td class="" data-colname="Aktionen">
+                                <button type="submit" class="btn btn-link-dark btn-sm" id="mpl_temp_visitor_id" name="mpl_temp_visitor_id" value="<?php echo $temp->mpl_temp_visitor_id ?>">
+                                    <clr-icon shape="login"></clr-icon>
+                                    gehen
+                                </button>
+                            </td>
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                    <tr class="iedit author-self level-0 type-page status-publish hentry">
+
+                        <td class="title column-title has-row-actions column-primary page-title" style="border-top: solid 2px #000;" data-colname="Vorname" colspan="7">
+                            <span style="font-weight: bold;">Angemeldete Besuchende</span>
+                        </td>
+
+                    </tr>
+
+                <?php endif; ?>
+
+
+
                 <?php foreach ($reservations as $r) : ?>
 
                     <?php

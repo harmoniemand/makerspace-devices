@@ -101,17 +101,17 @@ WHERE MOD(count, 2) > 0";
         $wpdb->get_results($sql);
 
 
-        // $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_id VARCHAR(40)";
-        // $wpdb->get_results($sql);
+        $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_id VARCHAR(40)";
+        $wpdb->get_results($sql);
         
-        // $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_name VARCHAR(255);";
-        // $wpdb->get_results($sql);
+        $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_name VARCHAR(255);";
+        $wpdb->get_results($sql);
 
-        // $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_address VARCHAR(255);";
-        // $wpdb->get_results($sql);
+        $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_address VARCHAR(255);";
+        $wpdb->get_results($sql);
 
-        // $sql = "ALTER TABLE makerspace_presence_logs ALTER COLUMN mpl_user_id NULL;";
-        // $wpdb->get_results($sql);
+        $sql = "ALTER TABLE makerspace_presence_logs ALTER COLUMN mpl_user_id NULL;";
+        $wpdb->get_results($sql);
 
     }
 }
