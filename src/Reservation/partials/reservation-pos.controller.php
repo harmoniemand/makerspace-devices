@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__) . "/../../entities/presence_log.entity.php";
+
 global $wpdb;
 
 $visitor_limit = get_option("makerspace_visitor_limit");
@@ -143,33 +145,7 @@ WHERE MOD(tmp.log_count, 2) > 0
 $temp_visitors = $wpdb->get_results($sql_temp_visitors);
 
 
-
-
-
-
-$logged_in_sql = "
-SELECT count(*) as count FROM (
-	SELECT 
-        mpl_user_id,
-        MOD(COUNT(mpl_user_id), 2) as log_count,
-        MIN(mpl_datetime) as arrived_at,
-        MAX(mpl_datetime) as leaved_at
-    FROM `makerspace_presence_logs`
-    WHERE 
-        mpl_datetime between %s AND %s
-    GROUP BY mpl_user_id
-    ) as tmp
-    WHERE log_count > 0
-";
-
-$logged_in_count = $wpdb->get_var( $wpdb->prepare(
-    $logged_in_sql,
-    $day->start->format("Y-m-d H:i:s"),
-    $day->end->format("Y-m-d H:i:s")
-));
-
-
-
+$logged_in_count = PresenceLogEntity::get_visitors_between($day->start, $day->end);
 
 
 if ($_GET["page"] == "reservations-timeline") {

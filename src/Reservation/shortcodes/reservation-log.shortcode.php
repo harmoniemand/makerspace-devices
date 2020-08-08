@@ -12,14 +12,16 @@ if (isset($_POST["makerspace_reservation_log_form_nonce"])) {
     INSERT INTO makerspace_presence_logs (
         mpl_temp_visitor_id, 
         mpl_temp_visitor_name,
-        mpl_temp_visitor_address
-    ) values (%s, %s, %s)";
+        mpl_temp_visitor_address,
+        mpl_datetime
+    ) values (%s, %s, %s, %s)";
 
     $wpdb->get_results($wpdb->prepare(
         $sql_mp_create_log,
         GuidHelper::GUID(),
         $_POST["mse_mpl_name"],
-        $_POST["mse_mpl_city"] . " " . $_POST["mse_mpl_street"]
+        $_POST["mse_mpl_city"] . " " . $_POST["mse_mpl_street"],
+        get_datetime()->format("Y-m-d H:i:s")
     ));
 
     $success = "Deine Kontaktdaten wurden hinterlegt und werden in 4 Wochen wieder automatisch gelöscht.";

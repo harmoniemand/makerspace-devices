@@ -13,24 +13,49 @@ class PresenceLogEntity
     {
         global $wpdb;
 
-        $sql = "
-SELECT COUNT(*) FROM (
-    SELECT 
-        mpl_user_id,
-        count(mpl_user_id) as COUNT
-    FROM `makerspace_presence_logs`
-    WHERE mpl_datetime BETWEEN %s AND %s
-    GROUP BY mpl_user_id
-) as tmp
-WHERE MOD(count, 2) > 0";
+        $logged_in_sql = "
+        SELECT count(*) as count FROM (
+            SELECT 
+                mpl_user_id,
+                MOD(COUNT(mpl_user_id), 2) as log_count,
+                MIN(mpl_datetime) as arrived_at,
+                MAX(mpl_datetime) as leaved_at
+            FROM `makerspace_presence_logs`
+            WHERE 
+                mpl_datetime between %s AND %s AND mpl_temp_visitor_id IS NULL
+            GROUP BY mpl_user_id
+            ) as tmp
+            WHERE log_count > 0
+        ";
 
-        $count = $wpdb->get_var($wpdb->prepare(
-            $sql,
+        $logged_in_count = $wpdb->get_var($wpdb->prepare(
+            $logged_in_sql,
             $from->format("Y-m-d H:i:s"),
             $to->format("Y-m-d H:i:s")
         ));
 
-        return $count;
+        $logged_in_sql = "
+        SELECT count(*) as count FROM (
+            SELECT 
+                mpl_temp_visitor_id,
+                MOD(COUNT(mpl_temp_visitor_id), 2) as log_count,
+                MIN(mpl_datetime) as arrived_at,
+                MAX(mpl_datetime) as leaved_at
+            FROM `makerspace_presence_logs`
+            WHERE 
+                mpl_datetime between %s AND %s AND mpl_temp_visitor_id IS NOT NULL
+            GROUP BY mpl_temp_visitor_id
+            ) as tmp
+            WHERE log_count > 0
+        ";
+
+        $logged_in_count += $wpdb->get_var($wpdb->prepare(
+            $logged_in_sql,
+            $from->format("Y-m-d H:i:s"),
+            $to->format("Y-m-d H:i:s")
+        ));
+
+        return $logged_in_count;
     }
 
 
@@ -103,7 +128,7 @@ WHERE MOD(count, 2) > 0";
 
         $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_id VARCHAR(40)";
         $wpdb->get_results($sql);
-        
+
         $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_name VARCHAR(255);";
         $wpdb->get_results($sql);
 
@@ -112,6 +137,5 @@ WHERE MOD(count, 2) > 0";
 
         $sql = "ALTER TABLE makerspace_presence_logs ALTER COLUMN mpl_user_id NULL;";
         $wpdb->get_results($sql);
-
     }
 }
