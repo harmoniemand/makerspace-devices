@@ -112,7 +112,7 @@ class DevicesPosttype
             'public'      => true,
             'has_archive' => true,
             'menu_icon'   => plugin_dir_url(MSM_FILE) . '/src/menu-icon.png',
-            // 'show_in_rest' => true,
+            'show_in_rest' => true,
             'supports'    => array('title', 'editor', 'author', 'thumbnail', 'custom-fields', 'excerpt',/* 'comments', 'custom-fields', 'revisions'*/),
             'taxonomies'  => array('ms_devices_workshop', 'category', 'post_tag'),
             // 'capabilities' => array( 'publish_posts' )
