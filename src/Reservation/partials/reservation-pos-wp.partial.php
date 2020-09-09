@@ -4,7 +4,7 @@
         <h1 class="wp-heading-inline">Reservierungen - POS</h1>
 
         <h1 class="wp-heading-inline">
-            Aktuell befinden sich <?php echo $logged_in_count ?> Personen im Maker Space
+            Aktuell befinden sich <?php echo $viewmodel->present_total_count ?> Personen im Maker Space
         </h1>
     </div>
 
@@ -19,15 +19,34 @@
         $d = (clone $url_data);
         $d->tab = "reserved";
         $url = http_build_query($d);
+        $current = $url_data->tab == "reserved" ? "current" : "";
         ?>
-        <li class="all"><a href="?<?php echo $url ?>" class="" aria-current="page">Nach Tag <span class="count">(<?php echo count($reservations) ?>)</span></a> |</li>
+        <li class="all">
+            <a href="?<?php echo $url ?>" class="<?php echo $current ?>" aria-current="page">
+                Anmeldungen<span class="count"> (<?php echo count($viewmodel->reserved) ?>)</span>
+            </a> |
+        </li>
+
+        <?php
+        $d = (clone $url_data);
+        $d->tab = "present";
+        $url = http_build_query($d);
+        $current = $url_data->tab == "present" ? "current" : "";
+        ?>
+        <li class="all">
+            <a href="?<?php echo $url ?>" class="<?php echo $current ?>" aria-current="page">
+                Alle Anwesenden<span class="count"> (<?php echo count($viewmodel->present) ?>)</span>
+            </a> |
+        </li>
+
 
         <?php
         $d = (clone $url_data);
         $d->tab = "all";
         $url = http_build_query($d);
+        $current = $url_data->tab == "all" ? "current" : "";
         ?>
-        <li class="all"><a href="?<?php echo $url ?>">Alle Besucherenden <span class="count">(<?php echo count(get_users()) ?>)</span></a></li>
+        <li class="all"><a href="?<?php echo $url ?>" class="<?php echo $current ?>">Alle User<span class="count"> (<?php echo count(get_users()) ?>)</span></a></li>
     </ul>
 
     <form method="POST" action="?<?php echo http_build_query($url_data) ?>">
@@ -117,25 +136,31 @@
             <tbody id="the-list">
 
 
-                <?php if (count($temp_visitors) > 0) : ?>
+                <?php if (count($viewmodel->visitors) > 0) : ?>
                     <tr class="iedit author-self level-0 type-page status-publish hentry">
 
                         <td class="title column-title has-row-actions column-primary page-title" data-colname="Vorname" colspan="7">
-                            <span style="font-weight: bold;">Temporäre Besuchende</span>
+                            <span style="font-weight: bold;"><?php echo _("Gäste") ?></span>
                         </td>
 
                     </tr>
 
-                    <?php foreach ($temp_visitors as $temp) : ?>
+                    <?php foreach ($viewmodel->visitors as $temp) : ?>
 
 
                         <tr class="iedit author-self level-0 type-page status-publish hentry">
 
-                            <td class="title column-title has-row-actions column-primary page-title" data-colname="Vorname" colspan="6">
+                            <td class="title column-title has-row-actions column-primary page-title" data-colname="Vorname" colspan="3">
                                 <span>
                                     <?php echo $temp->mpl_temp_visitor_name ?>
                                     <?php echo $temp->temp_visitor_address ?>
                                 </span>
+                            </td>
+
+                            <td class="" data-colname="Von - Bis" colspan="3">
+                                <span class=""><?php echo $r_from->format('H:i') ?></span>
+                                -
+                                <span class=""><?php echo $r_to->format('H:i') ?></span>
                             </td>
 
 
@@ -153,7 +178,7 @@
                     <tr class="iedit author-self level-0 type-page status-publish hentry">
 
                         <td class="title column-title has-row-actions column-primary page-title" style="border-top: solid 2px #000;" data-colname="Vorname" colspan="7">
-                            <span style="font-weight: bold;">Angemeldete Besuchende</span>
+                            <span style="font-weight: bold;"><?php echo _("Besuchende") ?></span>
                         </td>
 
                     </tr>
@@ -162,15 +187,15 @@
 
 
 
-                <?php foreach ($reservations as $r) : ?>
+                <?php foreach ($viewmodel->table_data as $r) : ?>
 
                     <?php
 
                     $r_user = get_userdata($r->mar_user_id);
-                    $r_from = new DateTime();
-                    $r_from->setTimestamp($r->mar_from);
-                    $r_to = new DateTime();
-                    $r_to->setTimestamp($r->mar_to);
+                    $r_from = new DateTime($r->mar_from);
+                    // $r_from->setTimestamp($r->mar_from);
+                    $r_to = new DateTime($r->mar_to);
+                    // $r_to->setTimestamp($r->mar_to);
 
                     $is_here = false;
                     $mpl_sql = "SELECT * FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN  %s AND %s AND mpl_user_id = %d";
@@ -305,7 +330,7 @@
 
             <div class="alignleft actions">
             </div>
-            <div class="tablenav-pages one-page"><span class="displaying-num"><?php echo count($reservations) ?> Einträge</span>
+            <div class="tablenav-pages one-page"><span class="displaying-num"><?php echo count($viewmodel->table_data) ?> Einträge</span>
                 <br class="clear">
             </div>
 
