@@ -158,9 +158,7 @@
                             </td>
 
                             <td class="" data-colname="Von - Bis" colspan="3">
-                                <span class=""><?php echo $r_from->format('H:i') ?></span>
-                                -
-                                <span class=""><?php echo $r_to->format('H:i') ?></span>
+
                             </td>
 
 
@@ -191,11 +189,22 @@
 
                     <?php
 
+                    // print_r($r);
+
                     $r_user = get_userdata($r->mar_user_id);
-                    $r_from = new DateTime($r->mar_from);
-                    // $r_from->setTimestamp($r->mar_from);
-                    $r_to = new DateTime($r->mar_to);
-                    // $r_to->setTimestamp($r->mar_to);
+                    $r_from = new DateTime();
+                    if (strpos($r->mar_from, "-") != false) {
+                        $r_from = new DateTime($r->mar_from);
+                    } else {
+                        $r_from->setTimestamp($r->mar_from);
+                    }
+
+                    $r_to = new DateTime();
+                    if (strpos($r->mar_to, "-") != false) {
+                        $r_to = new DateTime($r->mar_to);
+                    } else {
+                        $r_to->setTimestamp($r->mar_to);
+                    }
 
                     $is_here = false;
                     $mpl_sql = "SELECT * FROM makerspace_presence_logs WHERE mpl_datetime BETWEEN  %s AND %s AND mpl_user_id = %d";
@@ -236,7 +245,7 @@
                         <td class="" data-colname="Username">
                             <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
                             <strong>
-                                <a class="row-title" href="/wp-admin/user-edit.php?user_id=<?php echo $r->mar_user_id ?>" aria-label="„Aktuell befinden sich“ (Bearbeiten)">
+                                0 <a class="row-title" href="/wp-admin/user-edit.php?user_id=<?php echo $r->mar_user_id ?>" aria-label="„Aktuell befinden sich“ (Bearbeiten)">
                                     <?php echo $r_user->user_login  ?>
                                 </a>
                             </strong>
