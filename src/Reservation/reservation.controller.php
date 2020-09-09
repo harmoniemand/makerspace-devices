@@ -72,6 +72,18 @@ class ReservationEntity
             $icon_url
         );
 
+        $subpage_title = 'POS';
+        $submenu_title = 'POS';
+        $submenu_slug = 'reservations-pos';
+        add_submenu_page(
+            $menu_slug,
+            $subpage_title,
+            $submenu_title,
+            "edit_others_posts",
+            $submenu_slug,
+            array($this, "renderSubmenuReservationPOS")
+        );
+
         $subpage_title = 'Timeline';
         $submenu_title = 'Timeline';
         $submenu_slug = 'reservations-timeline';
@@ -84,17 +96,6 @@ class ReservationEntity
             array($this, "renderSubmenuReservationTimeline")
         );
 
-        $subpage_title = 'POS';
-        $submenu_title = 'POS';
-        $submenu_slug = 'reservations-pos';
-        add_submenu_page(
-            $menu_slug,
-            $subpage_title,
-            $submenu_title,
-            "edit_others_posts",
-            $submenu_slug,
-            array($this, "renderSubmenuReservationPOS")
-        );
 
         $subpage_title = 'Logs';
         $submenu_title = 'Logs';
@@ -109,7 +110,7 @@ class ReservationEntity
         );
     }
 
-    
+
 
     public function api_get_present_at($attr)
     {
@@ -118,6 +119,11 @@ class ReservationEntity
         return (object) array(
             "content" => PresenceLogEntity::get_visitors_present_at($end)
         );
+    }
+
+    public function api_get_reservation_presence_count_empty()
+    {
+        $this->api_get_reservation_presence_count(null);
     }
 
     public function api_get_reservation_presence_count($data)
@@ -147,17 +153,26 @@ class ReservationEntity
 
         register_rest_route('makerspace/v1', '/presence', array(
             'methods' => 'GET',
-            'callback' => array($this, 'api_get_reservation_presence_count'),
+            'callback' => array($this, 'api_get_reservation_presence_count_empty'),
+            'permission_callback' => function () {
+                return true;
+            }
         ));
 
         register_rest_route('makerspace/v1', '/presence/sum', array(
             'methods' => 'GET',
             'callback' => array($this, 'api_get_reservation_presence_count_sum'),
+            'permission_callback' => function () {
+                return true;
+            }
         ));
 
         register_rest_route('makerspace/v1', '/presence/at', array(
             'methods' => 'GET',
             'callback' => array($this, 'api_get_present_at'),
+            'permission_callback' => function () {
+                return true;
+            }
         ));
     }
 
@@ -206,8 +221,53 @@ class ReservationEntity
         wp_enqueue_style('css-custom-entity-reservation', plugins_url('reservation.styles.css', __FILE__));
     }
 
+    public function save_changes()
+    {
+        global $wpdb;
+
+        // create arrive / leave log for temp visitors
+        if (isset($_POST["mpl_temp_visitor_id"])) {
+            $sql_mp_create_log = "INSERT INTO makerspace_presence_logs (mpl_temp_visitor_id, mpl_datetime) values (%s, %s)";
+            $wpdb->get_results($wpdb->prepare(
+                $sql_mp_create_log,
+                $_POST["mpl_temp_visitor_id"],
+                get_datetime()->format("Y-m-d H:i:s")
+            ));
+        }
+
+        // create arrive / leave log
+        if (isset($_POST["mp_create_log"])) {
+            $sql_mp_create_log = "INSERT INTO makerspace_presence_logs (mpl_user_id, mpl_datetime) values (%d, %s)";
+            $wpdb->get_results($wpdb->prepare(
+                $sql_mp_create_log,
+                $_POST["mp_create_log"],
+                get_datetime()->format("Y-m-d H:i:s")
+            ));
+        }
+
+        // toggle security instruction and save
+        if (isset($_POST["ms_user_corona_safetyinstruction"])) {
+            if (get_user_meta($_POST["ms_user_corona_safetyinstruction"], "ms_user_corona_safetyinstruction")) {
+                delete_user_meta($_POST["ms_user_corona_safetyinstruction"], "ms_user_corona_safetyinstruction");
+            } else {
+                add_user_meta($_POST["ms_user_corona_safetyinstruction"], "ms_user_corona_safetyinstruction", get_datetime());
+            }
+        }
+
+        // toggle contact and save
+        if (isset($_POST["ms_user_corona_adress"])) {
+            if (get_user_meta($_POST["ms_user_corona_adress"], "ms_user_corona_adress")) {
+                delete_user_meta($_POST["ms_user_corona_adress"], "ms_user_corona_adress");
+            } else {
+                add_user_meta($_POST["ms_user_corona_adress"], "ms_user_corona_adress", get_datetime());
+            }
+        }
+    }
+
+
     public function register()
     {
+        add_action('init', array($this, "save_changes"));
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));
         add_action('init', array($this, 'register_Shortcodes'));
