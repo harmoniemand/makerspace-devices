@@ -40,7 +40,7 @@
         <div title="now" style="width: 5px; background: rgba(161, 198, 57, 0.6); position: absolute; top: 0; bottom: 0; left: <?php echo $current_time_margin ?>%;"></div>
 
 
-        <?php foreach ($reservations as $r) : ?>
+        <?php foreach ($viewmodel->table_data as $r) : ?>
             <?php
 
             $r_user = get_userdata($r->mar_user_id);
