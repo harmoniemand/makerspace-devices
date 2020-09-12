@@ -21,6 +21,19 @@ $gfbu_attachments = get_post_meta(
 
 ?>
 
+<div class="ml-2 mb-1 pt-2 pb-2">
+
+
+
+
+    <input id="upload_image_button" type="button" class="page-title-action" value="<?php _e('Upload image'); ?>" />
+    <input type='hidden' name='image_attachment_id' id='image_attachment_id' value=''>
+
+
+
+
+</div>
+
 
 <table class="wp-list-table widefat fixed striped pages">
     <thead>

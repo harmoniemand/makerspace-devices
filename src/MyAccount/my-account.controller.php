@@ -37,19 +37,19 @@ class MyAccountMain
 
     public function renderMenuMyData()
     {
-        require dirname(__FILE__) . '/partials/my-data.partial.php';
+        require dirname(__FILE__) . '/partials/my-data/my-data.partial.php';
     }
     public function renderSubmenuMySettings()
     {
-        require dirname(__FILE__) . '/partials/my-settings.partial.php';
+        require dirname(__FILE__) . '/partials/my-settings/my-settings.partial.php';
     }
     public function renderSubmenuDeviceLicenses()
     {
-        require dirname(__FILE__) . '/partials/my-device-licenses.php';
+        require dirname(__FILE__) . '/partials/device-licenses/my-device-licenses.php';
     }
     public function renderSubmenuChangePassword()
     {
-        require dirname(__FILE__) . '/change-password/change-password.partial.php';
+        require dirname(__FILE__) . '/partials/change-password/change-password.partial.php';
     }
 
     public function registerAdminMenu()
@@ -70,7 +70,7 @@ class MyAccountMain
             2
         );
 
-        // $subpage_title_device_license = __('Sicherheitsunterweisungen');
+        // $subpage_title_device_license = __('Sicherheits-unterweisungen');
         // $submenu_slug_device_license  = 'my_device_licenses';
         // add_submenu_page(
         //     $menu_slug,
@@ -116,8 +116,9 @@ class MyAccountMain
         }
     }
 
-    public function render_dashboard_widget_change_password () {
-        include 'change-password/change-password-dashboard-widget.partial.php';
+    public function render_dashboard_widget_change_password()
+    {
+        include dirname(__FILE__) . '/partials/change-password/change-password-dashboard-widget.partial.php';
     }
     public function add_dashboard_widgets()
     {
@@ -127,7 +128,6 @@ class MyAccountMain
             array($this, 'render_dashboard_widget_change_password') // Display function.
         );
     }
-
 
     public function prevent_user_profile()
     {
@@ -140,18 +140,53 @@ class MyAccountMain
         }
     }
 
-
     public function load_styles()
     {
         wp_enqueue_style('css-custom-my-account', plugins_url('me.styles.css', __FILE__));
     }
 
+
+
+    function c_update_user_meta($uid, $key, $value)
+    {
+        if ($value == false) {
+            delete_user_meta($uid, $key);
+            return;
+        }
+
+        update_user_meta($uid, $key, $value);
+    }
+    function save_my_account_calendar($uid)
+    {
+        $this->c_update_user_meta($uid, 'my_calendar_include_workshops', isset($_POST["my_calendar_include_workshops"]));
+        $this->c_update_user_meta($uid, 'my_calendar_include_my_workshops', isset($_POST["my_calendar_include_my_workshops"]));
+        $this->c_update_user_meta($uid, 'my_calendar_include_reservations', isset($_POST["my_calendar_include_reservations"]));
+        $this->c_update_user_meta($uid, 'my_calendar_include_my_reservations', isset($_POST["my_calendar_include_my_reservations"]));
+
+        $this->c_update_user_meta($uid, 'my_settings_last_update', new DateTime());
+        return true;
+    }
+
+
+    public function save_changes()
+    {
+        if (isset($_POST["mse_my_settings"])) {
+            global $success;
+            $success = "Deine Einstellungen wurden erfolgreich gespeichert.";
+            $uid = get_current_user_id();
+
+            $this->save_my_account_calendar($uid);
+            $success = $this->save_my_account_calendar($uid) ? $success : "Fehler beim Speichern der Kalendereinstellungen";
+        }
+    }
+
     public function register()
     {
         add_action('init', array($this, 'prevent_user_profile'));
+        add_action('init', array($this, 'save_changes'));
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));
-        add_action( 'wp_dashboard_setup', array($this, 'add_dashboard_widgets') );
+        add_action('wp_dashboard_setup', array($this, 'add_dashboard_widgets'));
     }
 
     public function activate()

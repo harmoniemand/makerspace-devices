@@ -47,5 +47,10 @@ class LdapHelper
         }
     }
 
+    public static function sanitize($query) {
+
+        return $query;
+    }
+
 
 }

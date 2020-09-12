@@ -112,7 +112,7 @@ class SecurityInstructionPosttype
             'menu_icon'   => plugin_dir_url(MSM_FILE) . '/src/menu-icon.png',
             'show_in_rest' => true,
             'supports'    => array('title', 'revisions', /*'editor', 'author', 'thumbnail',  'excerpt', 'comments', 'custom-fields', 'revisions'*/),
-            // 'taxonomies'  => array('category', 'post_tag'),
+            'taxonomies'  => array('ms_devices_workshop'),
             // 'capabilities' => array( 'publish_posts' )
         );
 
@@ -180,6 +180,14 @@ class SecurityInstructionPosttype
         }
     }
 
+    public function load_scripts_styles() {
+        // wp_enqueue_script("mse_si_custom_mediascript", )
+    }
+
+    public function media_selector_print_scripts() {
+        require( plugin_dir_path(__FILE__) . "partials/media.js.php" );
+    }
+
     public function register()
     {
 
@@ -200,6 +208,9 @@ class SecurityInstructionPosttype
         // subpages
         // add_action( 'admin_menu', array($this, 'add_menu') );
 
+        add_action('admin_enqueue_scripts', array($this, 'load_scripts_styles'));
+        
+        add_action( 'admin_enqueue_scripts', array( $this, 'media_selector_print_scripts') );
 
     }
 }

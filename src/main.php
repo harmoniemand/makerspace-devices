@@ -55,7 +55,7 @@ if (!class_exists('MS_Devices_Main')) {
 
 			// Load Submodules
 
-			require_once dirname(__FILE__) . '/Settings/settings.entity.php';
+			require_once dirname(__FILE__) . '/Settings/settings.controller.php';
 			$settingsEntity = SettingsEntity::instance();
 			$settingsEntity->register();
 			
@@ -63,7 +63,7 @@ if (!class_exists('MS_Devices_Main')) {
 			$registrationEntity = RegistrationEntity::instance();
 			$registrationEntity->register();
 
-			require_once plugin_dir_path(__FILE__) . '/MyAccount/my-account.main.php';
+			require_once plugin_dir_path(__FILE__) . '/MyAccount/my-account.controller.php';
 			$myAccountMain = new MyAccountMain();
 			$myAccountMain->register();
 
@@ -86,6 +86,10 @@ if (!class_exists('MS_Devices_Main')) {
 			require_once dirname(__FILE__) . '/Nextcloud/nextcloud.controller.php';
 			$nextcloudController = NextcloudController::instance();
 			$nextcloudController->register();
+
+			// require_once dirname(__FILE__) . '/Users/users.controller.php';
+			// $usersController = UsersController::instance();
+			// $usersController->register();
 		}
 
 		public function load_styles()
@@ -95,6 +99,8 @@ if (!class_exists('MS_Devices_Main')) {
 
 			wp_enqueue_script('js-custom-elements', plugins_url('/../node_modules/@webcomponents/custom-elements/custom-elements.min.js', __FILE__));
 			wp_enqueue_script('js-clr-icons', plugins_url('/../node_modules/@clr/icons/clr-icons.min.js', __FILE__));
+			wp_enqueue_script('js-bootstrap-util', plugins_url('/../node_modules/bootstrap/js/dist/util.js', __FILE__));
+			wp_enqueue_script('js-bootstrap-collapse', plugins_url('/../node_modules/bootstrap/js/dist/collapse.js', __FILE__));
 
 			wp_enqueue_style('css-custom-styles', plugins_url('styles/styles.css', __FILE__));
 			wp_enqueue_style('css-custom-calendar', plugins_url('styles/calendar.css', __FILE__));

@@ -11,6 +11,9 @@
 
     <?php
 
+    include_once  dirname(__FILE__) . "/../../Helper/LdapHelper.php";
+
+
     $error = "";
     $success = "";
 
@@ -26,12 +29,12 @@
 
     if (isset($_POST["makerspace_registration_form_nonce"])) {
 
-        $mse_registration_username = $_POST["mse_registration_username"];
-        $mse_registration_passwort = $_POST["mse_registration_passwort"];
-        $mse_registration_passwort_repeat = $_POST["mse_registration_passwort_repeat"];
-        $mse_registration_first_name = $_POST["mse_registration_first_name"];
-        $mse_registration_last_name = $_POST["mse_registration_last_name"];
-        $mse_registration_email = $_POST["mse_registration_email"];
+        $mse_registration_username = LdapHelper::sanitize($_POST["mse_registration_username"]);
+        $mse_registration_passwort = LdapHelper::sanitize($_POST["mse_registration_passwort"]);
+        $mse_registration_passwort_repeat = LdapHelper::sanitize($_POST["mse_registration_passwort_repeat"]);
+        $mse_registration_first_name = LdapHelper::sanitize($_POST["mse_registration_first_name"]);
+        $mse_registration_last_name = LdapHelper::sanitize($_POST["mse_registration_last_name"]);
+        $mse_registration_email = LdapHelper::sanitize($_POST["mse_registration_email"]);
         $mse_registration_privacy = isset($_POST["mse_registration_privacy"]) && $_POST["mse_registration_privacy"] == "Yes" ? true : false;
         $mse_registration_information = isset($_POST["mse_registration_information"]) && $_POST["mse_registration_information"] == "Yes" ? true : false;
 

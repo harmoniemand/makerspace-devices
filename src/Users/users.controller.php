@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
     die('-1');
 }
 
-class SettingsEntity
+class UsersController
 {
 
     const VERSION = '1.0.0';
@@ -35,26 +35,42 @@ class SettingsEntity
     }
 
 
-    public function renderSubmenuSettings()
+    public function renderMenuUsers()
     {
-        require dirname(__FILE__) . '/partials/settings.partial.php';
+        require dirname(__FILE__) . '/partials/list/users-list.controller.php';
+    }public function renderSubmenuUsersDetail()
+    {
+        require dirname(__FILE__) . '/partials/detail/users-detail.controller.php';
     }
 
     public function registerAdminMenu()
     {
-        $menu_slug  = 'options-general.php';
-        $capability = 'add_users';
-
-        $subpage_title = 'Maker Space';
-        $submenu_title = 'Maker Space';
-        $submenu_slug = 'ms_settings';
-        add_submenu_page(
+        $capability = 'edit_others_posts';
+        
+        $page_title = __('Besuchende');
+        $menu_title = __('Besuchende');
+        $menu_slug  = 'ms_users';
+        $icon_url   = 'dashicons-media-code';
+        add_menu_page(
+            $page_title,
+            $menu_title,
+            $capability,
             $menu_slug,
+            array($this, "renderMenuUsers"),
+            $icon_url,
+            2
+        );
+
+        $subpage_title = 'Detail';
+        $submenu_title = 'Detail';
+        $submenu_slug = 'ms_users_detail';
+        add_submenu_page(
+            $menu_slug . "_NOT_LISTED",
             $subpage_title,
             $submenu_title,
             $capability,
             $submenu_slug,
-            array($this, "renderSubmenuSettings")
+            array($this, "renderSubmenuUsersDetail")
         );
     }
 
@@ -63,15 +79,13 @@ class SettingsEntity
         if (isset($_POST['makerspace_settings_nonce'])) {
             $this->save_form_settings();
         }
-
-
     }
 
     public function save_form_settings()
     {
         // print_r($_POST);
 
-        
+
     }
 
     public function load_styles()
