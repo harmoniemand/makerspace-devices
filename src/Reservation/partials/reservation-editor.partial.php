@@ -82,10 +82,10 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
                     $error = __("Das ausgewählte Element liegt in der Vergangenheit.");
                 } else {
                     $hour->reserved = !$hour->reserved;
-    
+
                     $sql_rvp = "SELECT * FROM makerspace_advance_registrations WHERE mar_from = %d AND mar_user_id = %d";
                     $rvp = $wpdb->get_row($wpdb->prepare($sql_rvp, $hour->start, get_current_user_id()));
-    
+
                     if ($rvp != null) {
                         $sql_update_rvp = "UPDATE makerspace_advance_registrations set mar_deleted = %d WHERE mar_from = %d AND mar_user_id = %d";
                         $wpdb->get_results($wpdb->prepare($sql_update_rvp, !$hour->reserved, $hour->start, get_current_user_id()));
@@ -94,7 +94,6 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
                         $wpdb->get_results($wpdb->prepare($sql_create_rvp, !$hour->reserved, $hour->start, $hour->end, get_current_user_id()));
                     }
                 }
-
             }
         }
     }
@@ -139,43 +138,57 @@ if (isset($_POST["makerspace_advance_refistration_nonce"])) {
                         </a>
 
                         <?php foreach ($weekdays as $day) : ?>
-                            <div class="col-12 col-md-6 col-lg mt-5 mt-md-0">
-                                <h3><?php echo dayToString($day->date->format('w')); ?></h3>
-                                <h6><?php echo $day->date->format('d.m.'); ?></h6>
-                                <div class="">
 
-                                    <?php foreach ($day->hours as $h) : ?>
+                            <?php if ($day->date->format('d.m.') == "14.09." || $day->date->format('d.m.') == "15.09." || $day->date->format('d.m.') == "16.09.") : ?>
+                                <div class="col-11 col-md-6 col-lg border">
+                                    <h3><?php echo dayToString($day->date->format('w')); ?></h3>
+                                    <h6><?php echo $day->date->format('d.m.'); ?></h6>
+                                    <div class="">
 
-                                        <?php
-                                        $button_style = "btn-outline-success";
-                                        $button_disabled = "";
+                                        Maker Space geschlossen
 
-                                        if ($h->reserved) {
-                                            $button_style = "btn-success";
-                                        } else if ($visitor_limit - $h->count < 1) {
-                                            $button_style = "btn-outline-danger";
-                                            $button_disabled = "disabled";
-                                        }
-
-                                        if ($h->start < (new DateTime())->getTimestamp()) {
-                                            $button_disabled = "disabled";
-                                        }
-                                        ?>
-
-                                        <button type="submit" name="slot" id="slot" value="<?php echo $h->start ?>" class="mt-1 w-100 btn <?php echo $button_style ?>" <?php echo $button_disabled ?>>
-                                            <span class="mr-3"><?php echo $h->hour ?>:00</span>
-
-                                            <?php if ($h->reserved) : ?>
-                                                <span>du bist angemeldet</span><br />
-                                            <?php else : ?>
-                                                <span><?php echo $visitor_limit - $h->count ?> freie Plätze</span><br />
-                                            <?php endif; ?>
-                                        </button>
-
-                                    <?php endforeach; ?>
-
+                                    </div>
                                 </div>
-                            </div>
+                            <?php else : ?>
+
+                                <div class="col-12 col-md-6 col-lg mt-5 mt-md-0">
+                                    <h3><?php echo dayToString($day->date->format('w')); ?></h3>
+                                    <h6><?php echo $day->date->format('d.m.'); ?></h6>
+                                    <div class="">
+
+                                        <?php foreach ($day->hours as $h) : ?>
+
+                                            <?php
+                                            $button_style = "btn-outline-success";
+                                            $button_disabled = "";
+
+                                            if ($h->reserved) {
+                                                $button_style = "btn-success";
+                                            } else if ($visitor_limit - $h->count < 1) {
+                                                $button_style = "btn-outline-danger";
+                                                $button_disabled = "disabled";
+                                            }
+
+                                            if ($h->start < (new DateTime())->getTimestamp()) {
+                                                $button_disabled = "disabled";
+                                            }
+                                            ?>
+
+                                            <button type="submit" name="slot" id="slot" value="<?php echo $h->start ?>" class="mt-1 w-100 btn <?php echo $button_style ?>" <?php echo $button_disabled ?>>
+                                                <span class="mr-3"><?php echo $h->hour ?>:00</span>
+
+                                                <?php if ($h->reserved) : ?>
+                                                    <span>du bist angemeldet</span><br />
+                                                <?php else : ?>
+                                                    <span><?php echo $visitor_limit - $h->count ?> freie Plätze</span><br />
+                                                <?php endif; ?>
+                                            </button>
+
+                                        <?php endforeach; ?>
+
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         <?php endforeach; ?>
 
                         <a href="?page=reservations&offset=<?php echo ($offset + 1) ?>" class="w-100 d-md-none d-flex flex-md-column justify-content-center">

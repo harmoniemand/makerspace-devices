@@ -77,7 +77,7 @@ foreach ($weekdays as $day) {
     <div class="row">
 
         <a href="?offset=<?php echo ($offset - 1) ?>" class="w-100 d-md-none d-flex flex-md-column justify-content-center">
-            <clr-icon shape="angle" size="36" dir="up" ></clr-icon>
+            <clr-icon shape="angle" size="36" dir="up"></clr-icon>
         </a>
 
         <a href="?offset=<?php echo ($offset - 1) ?>" class="d-none d-md-flex flex-md-column justify-content-center">
@@ -85,24 +85,38 @@ foreach ($weekdays as $day) {
         </a>
 
         <?php foreach ($weekdays as $day) : ?>
-            <div class="col-11 col-md-6 col-lg border">
-                <h3><?php echo dayToString($day->date->format('w')); ?></h3>
-                <h6><?php echo $day->date->format('d.m.'); ?></h6>
-                <div class="">
 
-                    <?php foreach ($day->hours as $h) : ?>
-                        <a href="/wp-admin/admin.php?page=reservations" style="text-decoration: none !important; color: black !important; background-color: <?php echo $h->color ?>;" class="d-flex justify-content-between p-1">
-                            <span><?php echo $h->hour ?>:00</span>
-                            <span><?php echo $visitor_limit - $h->count ?> freie Plätze</span><br />
-                        </a>
-                    <?php endforeach; ?>
+            <?php if ($day->date->format('d.m.') == "14.09." || $day->date->format('d.m.') == "15.09." || $day->date->format('d.m.') == "16.09.") : ?>
+                <div class="col-11 col-md-6 col-lg border">
+                    <h3><?php echo dayToString($day->date->format('w')); ?></h3>
+                    <h6><?php echo $day->date->format('d.m.'); ?></h6>
+                    <div class="">
 
+                        Maker Space geschlossen
+
+                    </div>
                 </div>
-            </div>
+            <?php else : ?>
+
+                <div class="col-11 col-md-6 col-lg border">
+                    <h3><?php echo dayToString($day->date->format('w')); ?></h3>
+                    <h6><?php echo $day->date->format('d.m.'); ?></h6>
+                    <div class="">
+
+                        <?php foreach ($day->hours as $h) : ?>
+                            <a href="/wp-admin/admin.php?page=reservations" style="text-decoration: none !important; color: black !important; background-color: <?php echo $h->color ?>;" class="d-flex justify-content-between p-1">
+                                <span><?php echo $h->hour ?>:00</span>
+                                <span><?php echo $visitor_limit - $h->count ?> freie Plätze</span><br />
+                            </a>
+                        <?php endforeach; ?>
+
+                    </div>
+                </div>
+            <?php endif; ?>
         <?php endforeach; ?>
-        
+
         <a href="?offset=<?php echo ($offset + 1) ?>" class="w-100 d-md-none d-flex flex-md-column justify-content-center">
-            <clr-icon shape="angle" size="36" dir="down" ></clr-icon>
+            <clr-icon shape="angle" size="36" dir="down"></clr-icon>
         </a>
 
         <a href="?offset=<?php echo ($offset + 1) ?>" class="d-none d-md-flex flex-md-column justify-content-center">
