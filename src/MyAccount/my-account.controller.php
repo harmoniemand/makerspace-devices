@@ -70,15 +70,15 @@ class MyAccountMain
             3
         );
 
-        add_menu_page(
-            __('Sicherheits-unterweisungen'), // page_title
-            __('Sicherheits-unterweisungen'), // menu_title
-            'read', // capability
-            'my_device_licenses', // menu slug
-            array($this, "renderSubmenuDeviceLicenses"), // function
-            'dashicons-hammer', // icon
-            3
-        );
+        // add_menu_page(
+        //     __('Sicherheits-unterweisungen'), // page_title
+        //     __('Sicherheits-unterweisungen'), // menu_title
+        //     'read', // capability
+        //     'my_device_licenses', // menu slug
+        //     array($this, "renderSubmenuDeviceLicenses"), // function
+        //     'dashicons-hammer', // icon
+        //     3
+        // );
 
         add_menu_page(
             __('Einstellungen'), // page_title
