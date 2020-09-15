@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . "/../../Helper/LdapHelper.php";
+require_once dirname(__FILE__) . "/../../../Helper/LdapHelper.php";
 
 $error = false;
 $success = false;
