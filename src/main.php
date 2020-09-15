@@ -71,9 +71,9 @@ if (!class_exists('MS_Devices_Main')) {
 			$devicePosttype = new DevicesPosttype();
 			$devicePosttype->register();
 
-			// require_once plugin_dir_path(__FILE__) . '/SecurityInstructions/security-instructions.posttype.php';
-			// $securityInstructionPosttype = new SecurityInstructionPosttype();
-			// $securityInstructionPosttype->register();
+			require_once plugin_dir_path(__FILE__) . '/SecurityInstructions/security-instructions.posttype.php';
+			$securityInstructionPosttype = new SecurityInstructionPosttype();
+			$securityInstructionPosttype->register();
 
 			require_once dirname(__FILE__) . '/Reservation/reservation.controller.php';
 			$reservation = ReservationEntity::instance();
@@ -87,9 +87,9 @@ if (!class_exists('MS_Devices_Main')) {
 			$nextcloudController = NextcloudController::instance();
 			$nextcloudController->register();
 
-			// require_once dirname(__FILE__) . '/Users/users.controller.php';
-			// $usersController = UsersController::instance();
-			// $usersController->register();
+			require_once dirname(__FILE__) . '/Users/users.controller.php';
+			$usersController = UsersController::instance();
+			$usersController->register();
 		}
 
 		public function load_styles()

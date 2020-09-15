@@ -54,12 +54,12 @@ class MyAccountMain
 
     public function registerAdminMenu()
     {
-        $page_title = __('Meine Daten');
-        $menu_title = __('Meine Daten');
+        $page_title = __('Stammdaten');
+        $menu_title = __('Stammdaten');
         $capability = 'read';
         $menu_slug  = 'my_data';
         $function   = array($this, "renderMenuMyData");
-        $icon_url   = 'dashicons-media-code';
+        $icon_url   = 'dashicons-admin-users';
         add_menu_page(
             $page_title,
             $menu_title,
@@ -67,30 +67,27 @@ class MyAccountMain
             $menu_slug,
             $function,
             $icon_url,
-            2
+            3
         );
 
-        // $subpage_title_device_license = __('Sicherheits-unterweisungen');
-        // $submenu_slug_device_license  = 'my_device_licenses';
-        // add_submenu_page(
-        //     $menu_slug,
-        //     $subpage_title_device_license,
-        //     $subpage_title_device_license,
-        //     $capability,
-        //     $submenu_slug_device_license,
-        //     array($this, "renderSubmenuDeviceLicenses")
-        // );
+        add_menu_page(
+            __('Sicherheits-unterweisungen'), // page_title
+            __('Sicherheits-unterweisungen'), // menu_title
+            'read', // capability
+            'my_device_licenses', // menu slug
+            array($this, "renderSubmenuDeviceLicenses"), // function
+            'dashicons-hammer', // icon
+            3
+        );
 
-        $subpage_title = __('Meine Einstellungen');
-        $submenu_title = __('Meine Einstellungen');
-        $submenu_slug = 'my-settings';
-        add_submenu_page(
-            $menu_slug,
-            $subpage_title,
-            $submenu_title,
-            $capability,
-            $submenu_slug,
-            array($this, "renderSubmenuMySettings")
+        add_menu_page(
+            __('Einstellungen'), // page_title
+            __('Einstellungen'), // menu_title
+            'read', // capability
+            'my_settings', // menu slug
+            array($this, "renderSubmenuMySettings"), // function
+            'dashicons-admin-generic', // icon
+            3
         );
 
         if (!current_user_can("add_users")) {
@@ -98,16 +95,16 @@ class MyAccountMain
             remove_menu_page('profile.php');                  //Users
         }
 
-        $subpage_title = __('Mein Passwort');
-        $submenu_title = __('Mein Passwort');
-        $submenu_slug = 'my-password';
-        add_submenu_page(
-            $menu_slug,
-            $subpage_title,
-            $submenu_title,
-            $capability,
-            $submenu_slug,
-            array($this, "renderSubmenuChangePassword")
+        
+
+        add_menu_page(
+            __('Passwort'), // page_title
+            __('Passwort'), // menu_title
+            'read', // capability
+            'my_password', // menu slug
+            array($this, "renderSubmenuChangePassword"), // function
+            'dashicons-lock', // icon
+            3
         );
 
         if (!current_user_can("add_users")) {

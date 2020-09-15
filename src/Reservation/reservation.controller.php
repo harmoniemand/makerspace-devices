@@ -62,14 +62,15 @@ class ReservationEntity
         $capability = 'read';
         $menu_slug  = 'reservations';
         $function   = array($this, "renderSubmenuReservationEditor");
-        $icon_url   = 'dashicons-media-code';
+        $icon_url   = 'dashicons-calendar-alt';
         add_menu_page(
             $page_title,
             $menu_title,
             $capability,
             $menu_slug,
             $function,
-            $icon_url
+            $icon_url,
+            2
         );
 
         $subpage_title = 'POS';
