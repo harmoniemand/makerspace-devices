@@ -59,7 +59,7 @@ class SettingsEntity
             $menu_slug,
             array($this, "renderMenuSettingsGeneral"),
             $icon_url,
-            2
+            6
         );
 
         $subpage_title = 'MS LDAP';

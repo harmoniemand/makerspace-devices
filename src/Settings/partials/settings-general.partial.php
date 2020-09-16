@@ -28,7 +28,7 @@ $makerspace_visitor_limit = get_option("makerspace_visitor_limit");
     </div>
 <?php endif; ?>
 
-<form method="POST" action="?page=ms_settings">
+<form method="POST" action="?page=ms_settings_general">
 
     <?php wp_nonce_field(basename(__FILE__), 'makerspace_settings_general_nonce'); ?>
 
