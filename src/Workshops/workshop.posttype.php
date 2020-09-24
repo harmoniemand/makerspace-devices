@@ -146,6 +146,10 @@ class WorkshopPostType
         if (isset($_POST["workshop_option_free_seats"])) {
             update_post_meta($pid, "workshop_option_free_seats", $_POST["workshop_option_free_seats"]);
         }
+
+        if (isset($_POST["workshop_option_registration_url"])) {
+            update_post_meta($pid, "workshop_option_registration_url", $_POST["workshop_option_registration_url"]);
+        }
     }
 
     public function list_columns_head($defaults)

@@ -62,6 +62,8 @@ usort($events, function ($a, $b) {
         $count = $wpdb->get_var($wpdb->prepare($sql_registrations, $event->ID));
         $free_seats = $free_seats - $count;
 
+        $registration_url = get_post_meta($event->ID, 'workshop_option_registration_url', true);
+
         $attr_class = $highlight ? 'ms-highlight' : "";
         $attr_class .= " " . (!$free_seats ? 'ms-full' : "");
         ?>
@@ -103,10 +105,14 @@ usort($events, function ($a, $b) {
                         <h5 class="mb-1"><?php echo $event->post_title ?></h5>
                         <span>
                             <?php
-                            if ($free_seats > 0) {
-                                echo $free_seats . ' freie Plätze';
+                            if (empty($registration_url)) {
+                                if ($free_seats > 0) {
+                                    echo $free_seats . ' freie Plätze';
+                                } else {
+                                    echo "Workshop ausgebucht";
+                                }
                             } else {
-                                echo "Workshop ausgebucht";
+                                echo "Anmeldung extern";
                             }
                             ?>
                         </span>
