@@ -1,71 +1,35 @@
 <?php
 
 global $wpdb;
+include_once dirname(__FILE__) . "./../../../Repositories/UserRepository.php";
+$user_repo = new UserRepository();
 
-$uid = $_GET["user_id"];
 $saved = false;
+$uid = $_GET["user_id"];
 
-// Save Data
+if (isset($_POST["validate"]) && current_user_can('edit_others_posts')) {
+    echo "validate";
 
-function c_update_user_meta($uid, $key, $value)
-{
-    if ($value == false) {
-        delete_user_meta($uid, $key);
-        return;
-    }
+    $sql = "SELECT umeta_id, meta_value FROM wp_usermeta WHERE user_id = $uid AND meta_key = 'makerspace_userdata_address' ORDER BY umeta_id DESC LIMIT 1";
+    $data = $wpdb->get_row($sql);
+    $object = maybe_unserialize($data->meta_value);
 
-    update_user_meta($uid, $key, $value);
-}
+    $object->validated = true;
+    $object->validated_by = get_current_user_id();
+    $object->validated_at = new DateTime();
 
-function save_data($uid)
-{
-    c_update_user_meta($uid, 'first_name', $_POST["first_name"]);
-    c_update_user_meta($uid, 'last_name', $_POST["last_name"]);
-    c_update_user_meta($uid, 'nickname', $_POST["public_name"]);
-    wp_update_user(array("ID" => $uid, "user_nicename" => $_POST["public_name"],  "display_name" => $_POST["public_name"]));
+    $value = maybe_serialize($object);
+    $sql = "UPDATE wp_usermeta SET meta_value='$value' WHERE umeta_id = " . $data->umeta_id . "";
+    $data = $wpdb->get_var($sql);
+} else if (isset($_POST["mse_my_data_form"])) {
+    $saved_user = UserModel::from_post_array($_POST);
+    $saved_user->user_id = $uid;
 
-    c_update_user_meta($uid, 'makerspace_userdata_birthdays', $_POST["makerspace_userdata_birthdays"]);
-
-    c_update_user_meta($uid, 'makerspace_userdata_address_validated', $_POST["makerspace_userdata_address_validated"] == "on");
-    c_update_user_meta($uid, 'makerspace_userdata_address_street', $_POST["makerspace_userdata_address_street"]);
-    c_update_user_meta($uid, 'makerspace_userdata_address_number', $_POST["makerspace_userdata_address_number"]);
-    c_update_user_meta($uid, 'makerspace_userdata_address_zip', $_POST["makerspace_userdata_address_zip"]);
-    c_update_user_meta($uid, 'makerspace_userdata_address_city', $_POST["makerspace_userdata_address_city"]);
-
-    c_update_user_meta($uid, 'description', $_POST["makerspace_userdata_bio"]);
-
-    return true;
-}
-
-if (isset($_POST["mse_user_detail_form"])) {
-    $saved = save_data($uid);
+    $user_repo->Update($saved_user);
 }
 
 
-
-// Load Data
-
-$my_calendar_url = get_user_meta($uid, 'my_calendar_url', true);
-if ($my_calendar_url == false) {
-    $my_calendar_url = wp_generate_password(32, false, false);
-    update_user_meta($uid, 'my_calendar_url', $my_calendar_url);
-}
-
-$my_settings_last_update = get_user_meta($uid, 'my_settings_last_update', true);
-$my_settings_last_update = $my_settings_last_update == false ? 'nie' : $my_settings_last_update->format("d.m.Y H:i");
-
-$first_name = get_user_meta($uid, 'first_name', true);
-$last_name = get_user_meta($uid, 'last_name', true);
-$public_name = get_user_meta($uid, 'nickname', true);
-$makerspace_userdata_birthdays = get_user_meta($uid, 'makerspace_userdata_birthdays', true);
-
-$makerspace_userdata_address_validated = get_user_meta($uid, 'makerspace_userdata_address_validated', true);
-$makerspace_userdata_address_street = get_user_meta($uid, 'makerspace_userdata_address_street', true);
-$makerspace_userdata_address_number = get_user_meta($uid, 'makerspace_userdata_address_number', true);
-$makerspace_userdata_address_zip = get_user_meta($uid, 'makerspace_userdata_address_zip', true);
-$makerspace_userdata_address_city = get_user_meta($uid, 'makerspace_userdata_address_city', true);
-
-$makerspace_userdata_bio = get_user_meta($uid, 'description', true);
+$user = $user_repo->Read($uid);
 
 ?>
 
@@ -81,13 +45,13 @@ $makerspace_userdata_bio = get_user_meta($uid, 'description', true);
 
 
 
-<form method="POST" action="<?php echo "?page=ms_users_detail&user_id=$uid" ?>">
+<form method="POST" action="?page=ms_users_detail&user_id=<?php echo $uid ?>">
 
-    <?php wp_nonce_field(basename(__FILE__), 'mse_user_detail_form'); ?>
+    <?php wp_nonce_field(basename(__FILE__), 'mse_my_data_form'); ?>
 
     <div class="row mt-3" style="max-width: 100%;">
         <div class="col">
-            <h1 class="wp-heading-inline" style="font-size: 23px;"><?php echo __('Meine Stammdaten') ?></h1>
+            <h1 class="wp-heading-inline" style="font-size: 23px;"><?php echo __('Besucherdetails') ?></h1>
         </div>
     </div>
 
@@ -104,14 +68,14 @@ $makerspace_userdata_bio = get_user_meta($uid, 'description', true);
                     <div class="form-group row">
                         <label for="first_name" class="col-sm-2 col-form-label"><?php echo __('Vorname') ?></label>
                         <div class="col-sm-10">
-                            <input type="text" name="first_name" id="first_name" class="form-control-plaintext" value="<?php echo $first_name ?>">
+                            <input type="text" name="first_name" id="first_name" class="form-control-plaintext" value="<?php echo $user->first_name ?>">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="last_name" class="col-sm-2 col-form-label"><?php echo __('Nachname') ?></label>
                         <div class="col-sm-10">
-                            <input type="text" name="last_name" id="last_name" class="form-control-plaintext" value="<?php echo $last_name ?>">
+                            <input type="text" name="last_name" id="last_name" class="form-control-plaintext" value="<?php echo $user->last_name ?>">
                         </div>
                     </div>
 
@@ -121,14 +85,14 @@ $makerspace_userdata_bio = get_user_meta($uid, 'description', true);
                             <clr-icon shape="info-circle" class="is-info" title="Wird unter deinen Blogeinträgen und bei deinen Workshops angezeigt."></clr-icon>
                         </label>
                         <div class="col-sm-10">
-                            <input type="text" name="public_name" id="public_name" class="form-control-plaintext" value="<?php echo $public_name ?>">
+                            <input type="text" name="public_name" id="public_name" class="form-control-plaintext" value="<?php echo $user->public_name ?>">
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label for="makerspace_userdata_birthdays" class="col-sm-2 col-form-label"><?php echo __('Geburtsdatum') ?></label>
+                        <label for="birthday" class="col-sm-2 col-form-label"><?php echo __('Geburtsdatum') ?></label>
                         <div class="col-sm-10">
-                            <input type="date" name="makerspace_userdata_birthdays" id="makerspace_userdata_birthdays" class="form-control-plaintext" value="<?php echo $makerspace_userdata_birthdays ?>">
+                            <input type="date" name="birthday" id="birthday" class="form-control-plaintext" value="<?php echo $user->birthday ?>">
                         </div>
                     </div>
 
@@ -142,46 +106,119 @@ $makerspace_userdata_bio = get_user_meta($uid, 'description', true);
                         <h5 class="card-title"><?php echo __('Anschrift') ?></h5>
 
                         <div class="ml-auto">
-                            <div class="d-flex align-items-center">
-                                <?php
-                                $checked = "";
-                                if ($makerspace_userdata_address_validated == true) :
-                                    $checked = "checked";
-                                endif;
-                                ?>
-                                <label class="" for="makerspace_userdata_address_validated">Adresse verifiziert</label>
-                                <input type="checkbox" class="ml-3" id="makerspace_userdata_address_validated" name="makerspace_userdata_address_validated" <?php echo $checked ?>>
+
+                            <a class="btn btn-link" title="Historie anzeigen" data-toggle="collapse" href="#address_history" role="button" aria-expanded="false" aria-controls="address_history">
+                                <clr-icon shape="rewind"></clr-icon>
+                            </a>
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><?php echo __('Addresse verifiziert') ?></label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" name="address_validated" id="address_validated" class="form-control-plaintext" <?php echo $user->address && $user->address->validated ? "checked" : ""; ?> disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><?php echo __('Vorname') ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control-plaintext" value="<?php echo $user->first_name ?>" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><?php echo __('Nachname') ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control-plaintext" value="<?php echo $user->last_name ?>" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="address_street" class="col-sm-2 col-form-label"><?php echo __('Straße') ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="address_street" id="address_street" class="form-control-plaintext" value="<?php echo $user->address->street ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="address_number" class="col-sm-2 col-form-label"><?php echo __('Hausnummer') ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="address_number" id="address_number" class="form-control-plaintext" value="<?php echo $user->address->number ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="address_zip" class="col-sm-2 col-form-label"><?php echo __('PLZ') ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="address_zip" id="address_zip" class="form-control-plaintext" value="<?php echo $user->address->zip ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="address_city" class="col-sm-2 col-form-label"><?php echo __('Ort') ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="address_city" id="address_city" class="form-control-plaintext" value="<?php echo $user->address->city ?>">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-body collapse" id="address_history">
+
+                    <div style="display: flex;">
+                        <h5 class="card-title"><?php echo __('Anschrift Historie') ?></h5>
+                    </div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item font-weight-bold" style="margin-bottom: 0;">
+                            <div class="row" style="line-height: 24px;">
+                                <div class="col-sm-1 text-truncate" title="Bestätigt">Bestätigt</div>
+                                <div class="col-sm-3 text-truncate" title="Vorname Name">Vorname Name</div>
+                                <div class="col-sm-2 text-truncate" title="Straße">Straße</div>
+                                <div class="col-sm-1 text-truncate" title="Nummer">Nummer</div>
+                                <div class="col-sm-1 text-truncate" title="PLZ">PLZ</div>
+                                <div class="col-sm-2 text-truncate" title="Ort">Ort</div>
+                                <div class="col-sm-2 text-truncate" title="Erstellt am">Erstellt am</div>
                             </div>
-                        </div>
-                    </div>
+                        </li>
 
-                    <div class="form-group row">
-                        <label for="makerspace_userdata_address_street" class="col-sm-2 col-form-label"><?php echo __('Straße') ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="makerspace_userdata_address_street" id="makerspace_userdata_address_street" class="form-control-plaintext" value="<?php echo $makerspace_userdata_address_street ?>">
-                        </div>
-                    </div>
+                        <?php foreach ($user->addresses as $address) : ?>
 
-                    <div class="form-group row">
-                        <label for="makerspace_userdata_address_number" class="col-sm-2 col-form-label"><?php echo __('Hausnummer') ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="makerspace_userdata_address_number" id="makerspace_userdata_address_number" class="form-control-plaintext" value="<?php echo $makerspace_userdata_address_number ?>">
-                        </div>
-                    </div>
+                            <li class="list-group-item" style="margin-bottom: 0;">
+                                <div class="row" style="line-height: 24px;">
+                                    <div class="col-sm-1">
+                                        <?php if ($address && $address->validated) : ?>
+                                            <span style="margin-left: 1rem;">
+                                                <?php
 
-                    <div class="form-group row">
-                        <label for="makerspace_userdata_address_zip" class="col-sm-2 col-form-label"><?php echo __('PLZ') ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="makerspace_userdata_address_zip" id="makerspace_userdata_address_zip" class="form-control-plaintext" value="<?php echo $makerspace_userdata_address_zip ?>">
-                        </div>
-                    </div>
+                                                    $validated_by = $address->validated_by ? get_userdata($address->validated_by)->display_name : "";
+                                                ?>
+                                                <clr-icon size="20" shape="check-circle" class="is-success" title="Bestätigt von <?php echo $validated_by ?>"></clr-icon>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
 
-                    <div class="form-group row">
-                        <label for="makerspace_userdata_address_city" class="col-sm-2 col-form-label"><?php echo __('Ort') ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="makerspace_userdata_address_city" id="makerspace_userdata_address_city" class="form-control-plaintext" value="<?php echo $makerspace_userdata_address_city ?>">
-                        </div>
-                    </div>
+                                    <div class="col-sm-3">
+                                        <?php echo $address->first_name ?>
+                                        <?php echo $address->last_name ?>
+                                    </div>
+                                    <div class="col-sm-2"><?php echo $address->street ?></div>
+                                    <div class="col-sm-1"><?php echo $address->number ?></div>
+                                    <div class="col-sm-1"><?php echo $address->zip ?></div>
+                                    <div class="col-sm-2"><?php echo $address->city ?></div>
+                                    <div class="col-sm-2">
+                                        <?php echo $address->created ? $address->created->format('d.m.y H:i') : ""; ?>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+
+
+
 
                 </div>
             </div>
@@ -194,12 +231,12 @@ $makerspace_userdata_bio = get_user_meta($uid, 'description', true);
                     </div>
 
                     <div class="form-group row">
-                        <label for="makerspace_userdata_bio" class="col-sm-2 col-form-label">
+                        <label for="bio" class="col-sm-2 col-form-label">
                             <?php echo __('Biografie') ?>
                             <clr-icon shape="info-circle" class="is-info" title="Wird unter deinen Blogeinträgen und bei deinen Workshops angezeigt."></clr-icon>
                         </label>
                         <div class="col-sm-10">
-                            <textarea rows="5" style="border: 1px solid #7e8993;" class="form-control-plaintext" name="makerspace_userdata_bio" id="makerspace_userdata_bio"><?php echo $makerspace_userdata_bio ?></textarea>
+                            <textarea rows="5" style="border: 1px solid #7e8993;" class="form-control-plaintext" name="bio" id="bio"><?php echo $user->bio ?></textarea>
                         </div>
                     </div>
 
@@ -212,8 +249,8 @@ $makerspace_userdata_bio = get_user_meta($uid, 'description', true);
             <div class="card" style="padding: 0; border-radius: 0; font-size: 14px; ">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item" style="font-size: 14px; padding: 8px 12px;">Aktionen</li>
-                    <li class="list-group-item" style="font-size: 14px; padding: 8px 12px;">
-                        Letzte Änderung: <?php echo $my_settings_last_update ?>
+                    <li class="list-group-item d-flex justify-content-end" style="font-size: 14px; padding: 8px 12px;">
+                        <button type="submit" name="validate" id="validate" class="btn btn-outline-primary btn-sm">Addresse freigeben</button>
                     </li>
                     <li class="list-group-item d-flex justify-content-end" style="background: #f5f5f5; font-size: 14px; padding: 8px 12px;"">
                         <button type=" submit" class="btn btn-primary btn-sm" style="background: #0071a1;">speichern</button>

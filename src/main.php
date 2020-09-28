@@ -71,9 +71,9 @@ if (!class_exists('MS_Devices_Main')) {
 			$devicePosttype = new DevicesPosttype();
 			$devicePosttype->register();
 
-			// require_once plugin_dir_path(__FILE__) . '/SecurityInstructions/security-instructions.posttype.php';
-			// $securityInstructionPosttype = new SecurityInstructionPosttype();
-			// $securityInstructionPosttype->register();
+			require_once plugin_dir_path(__FILE__) . '/SecurityInstructions/security-instructions.posttype.php';
+			$securityInstructionPosttype = new SecurityInstructionPosttype();
+			$securityInstructionPosttype->register();
 
 			require_once dirname(__FILE__) . '/Reservation/reservation.controller.php';
 			$reservation = ReservationEntity::instance();
@@ -87,15 +87,15 @@ if (!class_exists('MS_Devices_Main')) {
 			$nextcloudController = NextcloudController::instance();
 			$nextcloudController->register();
 
-			// require_once dirname(__FILE__) . '/Users/users.controller.php';
-			// $usersController = UsersController::instance();
-			// $usersController->register();
+			require_once dirname(__FILE__) . '/Users/users.controller.php';
+			$usersController = UsersController::instance();
+			$usersController->register();
 		}
 
 		public function load_styles()
 		{
 			wp_enqueue_style('css-bootstrap', plugins_url('/../node_modules/bootstrap/dist/css/bootstrap.min.css', __FILE__));
-			wp_enqueue_style('css-clr-icons', plugins_url('/../node_modules/@clr/icons/clr-icons.min.css', __FILE__));
+			wp_enqueue_style('css-clr-icons', plugins_url('/../node_modules/@clr/icons/clr-icons.css', __FILE__));
 
 			wp_enqueue_script('js-custom-elements', plugins_url('/../node_modules/@webcomponents/custom-elements/custom-elements.min.js', __FILE__));
 			wp_enqueue_script('js-clr-icons', plugins_url('/../node_modules/@clr/icons/clr-icons.min.js', __FILE__));

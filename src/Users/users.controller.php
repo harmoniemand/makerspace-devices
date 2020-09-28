@@ -58,7 +58,7 @@ class UsersController
             $menu_slug,
             array($this, "renderMenuUsers"),
             $icon_url,
-            2
+            4
         );
 
         $subpage_title = 'Detail';
