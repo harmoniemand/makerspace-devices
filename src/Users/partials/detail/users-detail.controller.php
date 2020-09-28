@@ -1,7 +1,7 @@
 <?php
 
 global $wpdb;
-include_once dirname(__FILE__) . "./../../../Repositories/UserRepository.php";
+include_once dirname(__FILE__) . "/../../../Repositories/UserRepository.php";
 $user_repo = new UserRepository();
 
 $saved = false;
