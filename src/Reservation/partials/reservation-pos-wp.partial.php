@@ -1,7 +1,7 @@
 <div class="wrap">
 
     <div class="d-flex justify-content-between">
-        <h1 class="wp-heading-inline">Reservierungen - POS</h1>
+        <h1 class="wp-heading-inline">Check-In</h1>
 
         <h1 class="wp-heading-inline">
             Aktuell befinden sich <?php echo $viewmodel->present_total_count ?> Personen im Maker Space
@@ -245,7 +245,7 @@
                         <td class="" data-colname="Username">
                             <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
                             <strong>
-                                <a class="row-title" href="/wp-admin/user-edit.php?user_id=<?php echo $r->mar_user_id ?>" aria-label="„Aktuell befinden sich“ (Bearbeiten)">
+                                <a class="row-title" href="/wp-admin/admin.php?page=ms_users_detail&user_id=<?php echo $r->mar_user_id ?>" aria-label="„Aktuell befinden sich“ (Bearbeiten)">
                                     <?php echo $r_user->user_login  ?>
                                 </a>
                             </strong>

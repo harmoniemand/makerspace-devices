@@ -73,8 +73,8 @@ class ReservationEntity
             2
         );
 
-        $subpage_title = 'POS';
-        $submenu_title = 'POS';
+        $subpage_title = 'Check-In';
+        $submenu_title = 'Check-In';
         $submenu_slug = 'reservations-pos';
         add_submenu_page(
             $menu_slug,
