@@ -54,6 +54,10 @@ class ReservationEntity
     {
         require dirname(__FILE__) . '/partials/reservation-logs/reservation-logs.controller.php';
     }
+    public function renderSubmenuReservationExport()
+    {
+        require dirname(__FILE__) . '/partials/reservation-export/reservation-export.controller.php';
+    }
 
     public function registerAdminMenu()
     {
@@ -73,23 +77,21 @@ class ReservationEntity
             2
         );
 
-        $subpage_title = 'Check-In';
-        $submenu_title = 'Check-In';
-        $submenu_slug = 'reservations-pos';
-        add_submenu_page(
-            $menu_slug,
-            $subpage_title,
-            $submenu_title,
-            "edit_others_posts",
-            $submenu_slug,
-            array($this, "renderSubmenuReservationPOS")
+        add_menu_page(
+            'Check-In',
+            'Check-In',
+            'edit_others_posts',
+            'reservations-checkin',
+            array($this, "renderSubmenuReservationPOS"),
+            $icon_url,
+            4
         );
 
         $subpage_title = 'Timeline';
         $submenu_title = 'Timeline';
         $submenu_slug = 'reservations-timeline';
         add_submenu_page(
-            $menu_slug,
+            'reservations-checkin',
             $subpage_title,
             $submenu_title,
             "edit_others_posts",
@@ -102,12 +104,24 @@ class ReservationEntity
         $submenu_title = 'Logs';
         $submenu_slug = 'reservations-logs';
         add_submenu_page(
-            $menu_slug,
+            'reservations-checkin',
             $subpage_title,
             $submenu_title,
             "edit_others_posts",
             $submenu_slug,
             array($this, "renderSubmenuReservationLogs")
+        );
+
+        $subpage_title = 'COVID Export';
+        $submenu_title = 'COVID Export';
+        $submenu_slug = 'reservations-covid-export';
+        add_submenu_page(
+            'reservations-checkin',
+            $subpage_title,
+            $submenu_title,
+            "edit_others_posts",
+            $submenu_slug,
+            array($this, "renderSubmenuReservationExport")
         );
     }
 

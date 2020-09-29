@@ -85,22 +85,33 @@ $uid = get_current_user_id();
                                             <clr-icon shape="check-circle" class="is-success" title="Sicherheitsunterweisung gültig"></clr-icon>
                                         </div>
                                     <?php endif; ?>
+
+                                    <div class="ml-auto">
+                                        <a href="<?php echo get_permalink($device->ID) ?>" class="btn btn-outline-primary btn-sm">
+                                            Inhalt ansehen
+                                        </a>
+                                    </div>
                                 </div>
 
-                                <div class="collapse w-100 pl-4" id="<?php echo "security_instruction_for_" . $device->ID ?>">
+                                <div class="collapse w-100 pl-0" id="<?php echo "security_instruction_for_" . $device->ID ?>">
 
-                                    <?php foreach ($licenses as $license) : ?>
-                                        <div class="d-flex">
-                                            <div class="w-100">
-                                                Erstellt am: <?php echo $license->date->format("d.m.Y") ?>
-                                            </div>
+                                    <ul class="list-group">
+                                        <?php foreach ($licenses as $license) : ?>
+                                            <li class="list-group-item" style="margin-bottom: 0;">
+                                                <div class="row" style="line-height: 24px;">
+                                                    <div class="col-sm-3">
+                                                        Angelegt von: <?php echo get_userdata($license->created_by)->display_name ?>
+                                                    </div>
 
-                                            <div class="w-100">
-                                                Erstellt von: <?php echo get_userdata($license->created_by)->display_name ?>
-                                            </div>
+                                                    <div class="col-sm-3">
+                                                        Angelegt am: <?php echo $license->date->format("d.m.Y") ?>
+                                                    </div>
 
-                                        </div>
-                                    <?php endforeach; ?>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+
                                 </div>
                             </div>
                         <?php endforeach; ?>

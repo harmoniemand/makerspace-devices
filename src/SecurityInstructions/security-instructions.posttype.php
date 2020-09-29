@@ -111,7 +111,7 @@ class SecurityInstructionPosttype
             'has_archive' => true,
             'menu_icon'   => plugin_dir_url(MSM_FILE) . '/src/menu-icon.png',
             'show_in_rest' => true,
-            'supports'    => array('title', 'revisions', /*'editor', 'author', 'thumbnail',  'excerpt', 'comments', 'custom-fields', 'revisions'*/),
+            'supports'    => array('title', 'revisions', 'editor' /*, 'author', 'thumbnail',  'excerpt', 'comments', 'custom-fields', 'revisions'*/),
             'taxonomies'  => array('ms_devices_workshop'),
             // 'capabilities' => array( 'publish_posts' )
         );
