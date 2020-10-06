@@ -30,6 +30,8 @@ class UserModel
     public static function from_post_array($post_arr) {
         $user = new UserModel();
 
+        $post_arr = BasicModel::strip_all_tags($post_arr);
+
         $user->first_name = $post_arr["first_name"] ?? "";
         $user->last_name = $post_arr["last_name"] ?? "";
         $user->public_name = $post_arr["public_name"] ?? "";
@@ -65,6 +67,8 @@ class UserAddressModel extends BasicMetaModel
 
     public static function from_post_array($post_arr) {
         $user_address = new UserAddressModel();
+
+        $post_arr = BasicModel::strip_all_tags($post_arr);
 
         $user_address->validated = $post_arr["address_validated"] ?? false;
 

@@ -90,6 +90,10 @@ if (!class_exists('MS_Devices_Main')) {
 			require_once dirname(__FILE__) . '/Users/users.controller.php';
 			$usersController = UsersController::instance();
 			$usersController->register();
+
+			// require_once dirname(__FILE__) . '/_Debug/debug.controller.php';
+			// $debugController = DebugController::instance();
+			// $debugController->register();
 		}
 
 		public function load_styles()

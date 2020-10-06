@@ -19,8 +19,8 @@ if (isset($_POST["makerspace_reservation_log_form_nonce"])) {
     $wpdb->get_results($wpdb->prepare(
         $sql_mp_create_log,
         GuidHelper::GUID(),
-        $_POST["mse_mpl_name"],
-        $_POST["mse_mpl_city"] . " " . $_POST["mse_mpl_street"],
+        wp_strip_all_tags( $_POST["mse_mpl_name"] ),
+        wp_strip_all_tags( $_POST["mse_mpl_city"] . " " . $_POST["mse_mpl_street"] ),
         get_datetime()->format("Y-m-d H:i:s")
     ));
 
