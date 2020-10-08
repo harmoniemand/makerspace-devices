@@ -85,7 +85,7 @@ endif;
 
 
 
-<form method="post" action="/wp-admin/admin.php?page=my-password">
+<form method="post" action="/wp-admin/admin.php?page=my_password">
 
     <?php wp_nonce_field(basename(__FILE__), 'my-account-change-password-nonce'); ?>
 
