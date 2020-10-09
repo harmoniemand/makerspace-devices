@@ -58,6 +58,10 @@ class ReservationEntity
     {
         require dirname(__FILE__) . '/partials/reservation-export/reservation-export.controller.php';
     }
+    public function renderSubmenuStats()
+    {
+        require dirname(__FILE__) . '/partials/reservation-stats/reservation-stats.controller.php';
+    }
 
     public function registerAdminMenu()
     {
@@ -122,6 +126,18 @@ class ReservationEntity
             "edit_others_posts",
             $submenu_slug,
             array($this, "renderSubmenuReservationExport")
+        );
+
+        $subpage_title = 'Stats';
+        $submenu_title = 'Stats';
+        $submenu_slug = 'reservations-stats';
+        add_submenu_page(
+            'reservations-checkin',
+            $subpage_title,
+            $submenu_title,
+            "edit_others_posts",
+            $submenu_slug,
+            array($this, "renderSubmenuStats")
         );
     }
 
