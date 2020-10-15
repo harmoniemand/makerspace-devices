@@ -50,6 +50,11 @@ class ReservationEntity
         require dirname(__FILE__) . '/partials/reservation-pos.controller.php';
         // require dirname(__FILE__) . '/partials/reservation-timeline.partial.php';
     }
+    public function renderSubmenuReservationAddGuest()
+    {
+        require dirname(__FILE__) . '/partials/reservation-add-guest/reservation-add-guest.partial.php';
+        // require dirname(__FILE__) . '/partials/reservation-timeline.partial.php';
+    }
     public function renderSubmenuReservationLogs()
     {
         require dirname(__FILE__) . '/partials/reservation-logs/reservation-logs.controller.php';
@@ -101,6 +106,18 @@ class ReservationEntity
             "ms_checkin",
             $submenu_slug,
             array($this, "renderSubmenuReservationTimeline")
+        );
+
+        $subpage_title = 'Gast anmelden';
+        $submenu_title = 'Gast anmelden';
+        $submenu_slug = 'reservations-add-guest';
+        add_submenu_page(
+            'reservations-checkin',
+            $subpage_title,
+            $submenu_title,
+            "ms_checkin",
+            $submenu_slug,
+            array($this, "renderSubmenuReservationAddGuest")
         );
 
 
@@ -308,6 +325,10 @@ class ReservationEntity
                 'ms_edit_users' => true,
             ]
         );
+
+        
+        $role_editor = get_role('editor');
+        $role_editor->add_cap('ms_checkin', true);
     }
 
     // add the example_role
