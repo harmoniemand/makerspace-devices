@@ -1,3 +1,10 @@
+<?php
+
+global $login_error;
+
+
+?>
+
 <?php if (is_user_logged_in()) : ?>
 
     <div class="alert alert-danger" role="alert">
@@ -20,6 +27,18 @@
                             <span aria-hidden="true">&times;</span>
                         </a>
                     </div>
+
+
+                    <?php if (isset($login_error)) : ?>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="alert">
+                                <?php
+                                echo $login_error;
+                                ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="modal-body">
                         <div class="col-12 mt-3">
                             <div class="form-group row">
