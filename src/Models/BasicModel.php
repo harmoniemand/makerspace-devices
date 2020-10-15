@@ -27,6 +27,7 @@ class BasicModel
         $obj_arr = get_object_vars ($obj);
         $keys = array_keys($obj_arr);
 
+
         foreach($keys as $key) {
             $arr[$key] = BasicModel::strip_all_tags($obj_arr[$key]);
         }
@@ -38,8 +39,8 @@ class BasicModel
     {
         $ret_arr = array();
 
-        foreach ($arr as $elem) {
-            array_push($ret_arr, BasicModel::strip_all_tags_from_text($elem));
+        foreach ($arr as $key => $elem) {
+            $ret_arr[$key] = BasicModel::strip_all_tags_from_text($elem);
         }
 
         return $ret_arr;
