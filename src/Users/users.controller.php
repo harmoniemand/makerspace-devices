@@ -45,7 +45,7 @@ class UsersController
 
     public function registerAdminMenu()
     {
-        $capability = 'edit_others_posts';
+        $capability = 'ms_read_users';
         
         $page_title = __('Besuchende');
         $menu_title = __('Besuchende');
@@ -54,7 +54,7 @@ class UsersController
         add_menu_page(
             $page_title,
             $menu_title,
-            $capability,
+            "ms_read_users",
             $menu_slug,
             array($this, "renderMenuUsers"),
             $icon_url,
@@ -68,7 +68,7 @@ class UsersController
             $menu_slug . "_NOT_LISTED",
             $subpage_title,
             $submenu_title,
-            $capability,
+            "ms_edit_users",
             $submenu_slug,
             array($this, "renderSubmenuUsersDetail")
         );
@@ -93,8 +93,18 @@ class UsersController
         // wp_enqueue_style('css-custom-entity-reservation', plugins_url('reservation.styles.css', __FILE__));
     }
 
+    public function register_roles() {
+        $role_editor = get_role('editor');
+        $role_editor->add_cap('ms_read_users', true);
+        $role_editor->add_cap('ms_edit_users', true);
+
+        $role_checkin = get_role('checkin');
+        $role_checkin->add_cap('ms_edit_users', true);
+    }
+
     public function register()
     {
+        add_action('init', array($this, 'register_roles'));
         add_action('init', array($this, 'save_forms'));
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));

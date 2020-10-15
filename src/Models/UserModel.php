@@ -11,6 +11,7 @@ include_once dirname(__FILE__) . "/BasicModel.php";
 class UserModel
 {
     public $user_id;
+    public $login_name;
 
     public $first_name;
     public $last_name;

@@ -84,7 +84,7 @@ class ReservationEntity
         add_menu_page(
             'Check-In',
             'Check-In',
-            'edit_others_posts',
+            'ms_checkin',
             'reservations-checkin',
             array($this, "renderSubmenuReservationPOS"),
             $icon_url,
@@ -98,7 +98,7 @@ class ReservationEntity
             'reservations-checkin',
             $subpage_title,
             $submenu_title,
-            "edit_others_posts",
+            "ms_checkin",
             $submenu_slug,
             array($this, "renderSubmenuReservationTimeline")
         );
@@ -295,9 +295,27 @@ class ReservationEntity
         }
     }
 
+    public function register_roles()
+    {
+        add_role(
+            'checkin',
+            'CheckIn Service User Role',
+            [
+                // list of capabilities for this role
+                'read'         => true,
+                'ms_checkin'   => true,
+                'ms_read_users' => true,
+                'ms_edit_users' => true,
+            ]
+        );
+    }
+
+    // add the example_role
+
 
     public function register()
     {
+        add_action('init', array($this, 'register_roles'));
         add_action('init', array($this, "save_changes"));
         add_action('admin_enqueue_scripts', array($this, 'load_styles'));
         add_action('admin_menu', array($this, "registerAdminMenu"));

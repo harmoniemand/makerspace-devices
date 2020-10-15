@@ -30,12 +30,28 @@ class UserRepository extends BasicRepository
         }
     }
 
+    function ReadAll()
+    {
+        global $wpdb;
+        $users = array();
+
+        $sql_all = "SELECT wp_users.ID as ID FROM wp_users";
+        $result = $wpdb->get_results($sql_all);
+
+        foreach($result as $row) {
+            array_push($users, $this->Read($row->ID));
+        }
+
+        return $users;
+    }
+
 
     function Read($user_id)
     {
         $user = new UserModel();
 
         $user->user_id = $user_id;
+        $user->login_name = get_userdata($user_id)->user_login;
         $user->first_name = $this->custom_get_user_meta($user_id, 'first_name', true);
         $user->last_name = $this->custom_get_user_meta($user_id, 'last_name', true);
         $user->public_name = $this->custom_get_user_meta($user_id, 'nickname', true);
@@ -88,6 +104,5 @@ class UserRepository extends BasicRepository
             $user->address->created = new DateTime();
             $this->add_user_meta_if_changed($user->user_id, 'makerspace_userdata_address', $user->address);
         }
-
     }
 }

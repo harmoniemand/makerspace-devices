@@ -37,7 +37,7 @@ JOIN wp_users ON tmp.uid = wp_users.ID
 JOIN wp_usermeta AS first_name ON tmp.uid = first_name.user_id AND first_name.meta_key = 'first_name'
 JOIN wp_usermeta AS last_name ON tmp.uid = last_name.user_id AND last_name.meta_key = 'last_name'
 
-WHERE last_visit BETWEEN '" . $from->format("Y-m-d 00:00:00") . "' AND '" . $to->format("Y-m-d 00:00:00") . "'
+WHERE last_visit BETWEEN '" . $from->format("Y-m-d 00:00:00") . "' AND '" . $to->format("Y-m-d 23:59:59") . "'
 
 ORDER BY tmp.last_visit
 ";
