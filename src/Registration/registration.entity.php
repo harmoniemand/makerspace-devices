@@ -74,6 +74,8 @@ class RegistrationEntity
 
     public function custom_login()
     {
+        global $login_error;
+
         if (isset($_POST["makerspace_login_nonce"])) {
 
             $credentials = array(); // Back-compat for plugins passing an empty string.
@@ -89,6 +91,8 @@ class RegistrationEntity
             if (is_wp_error($user_signon)) {
                 error_log("error while logging in");
                 error_log($user_signon);
+
+                $login_error = $user_signon->get_error_message();
                 // print_r($user);
             } else {
                 $userID = $user_signon->ID;
@@ -102,6 +106,7 @@ class RegistrationEntity
                     wp_redirect("/wp-admin/");
                     exit();
                 } else {
+                    $login_error = "somethign went wrong while logging in";
                     error_log("somethign went wrong while logging in");
                 }
             }
