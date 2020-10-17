@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     die('-1');
 }
 
-http_response_code(403);
+// http_response_code(403);
 
 ?>
 
@@ -106,9 +106,9 @@ http_response_code(403);
                         <?php echo $user->last_name  ?>
                     </td>
                     <td class="" data-colname="Username">
-                        <div class="locked-info"><span class="locked-avatar"></span> <span class="locked-text"></span></div>
+
                         <strong>
-                            <a class="row-title" href="/wp-admin/admin.php?page=ms_users_detail&user_id=<?php echo $user->mar_user_id ?>" aria-label="„Aktuell befinden sich“ (Bearbeiten)">
+                            <a class="row-title" href="/wp-admin/admin.php?page=ms_users_detail&user_id=<?php echo $user->user_id ?>">
                                 <?php echo $user->login_name  ?>
                             </a>
                         </strong>
