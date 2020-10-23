@@ -57,6 +57,8 @@ class UserRepository extends BasicRepository
         $user->public_name = $this->custom_get_user_meta($user_id, 'nickname', true);
         $user->birthday = $this->get_user_meta_latest_value($user_id, 'birthday', true);
         $user->bio = $this->custom_get_user_meta($user_id, 'description', true);
+        $user->phone = $this->custom_get_user_meta($user_id, 'phone', true);
+        $user->email = get_userdata($user_id)->user_email;
 
         $user->addresses = $this->custom_get_user_meta($user_id, 'makerspace_userdata_address', false);
         $user->address = $this->get_user_meta_latest_value($user_id, 'makerspace_userdata_address') ?? new UserAddressModel();
@@ -78,10 +80,12 @@ class UserRepository extends BasicRepository
 
         $this->update_user_meta_if_changed($user->user_id, 'last_name', $user->last_name);
         $this->add_user_meta_if_changed($user->user_id, 'last_name_history', $user->last_name);
+        $this->add_user_meta_if_changed($user->user_id, 'phone', $user->phone);
 
         wp_update_user(array(
             'ID'            => $user->user_id,
-            'display_name' => $user->public_name
+            'display_name'  => $user->public_name,
+            'user_email'    => $user->email
         ));
         $this->update_user_meta_if_changed($user->user_id, 'nickname', $user->public_name);
 

@@ -20,6 +20,9 @@ class UserModel
     public $birthday;
     public $bio;
 
+    public $email;
+    public $phone;
+
     public $addresses = array();
     public ?UserAddressModel $address;
 
@@ -38,6 +41,9 @@ class UserModel
         $user->public_name = $post_arr["public_name"] ?? "";
         $user->birthday = $post_arr["birthday"] ?? null;
         $user->bio = $post_arr["bio"] ?? null;
+
+        $user->email = $post_arr["email"] ?? null;
+        $user->phone = $post_arr["phone"] ?? null;
 
         $user->address = UserAddressModel::from_post_array($post_arr);
 

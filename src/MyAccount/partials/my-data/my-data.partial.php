@@ -83,6 +83,38 @@ $user = $user_repo->Read($uid);
                 </div>
             </div>
 
+
+
+            <div class="card wp-settings" style="border-radius: 0; padding: 8px 12px;">
+                <div class="card-body">
+
+                    <div style="display: flex;">
+                        <h5 class="card-title"><?php echo __('Kontakt') ?></h5>
+
+                        <div class="ml-auto">
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><?php echo __('E-Mail') ?></label>
+                        <div class="col-sm-10">
+                            <input type="email" name="email" id="email" class="form-control-plaintext" value="<?php echo $user->email ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><?php echo __('Telefon') ?></label>
+                        <div class="col-sm-10">
+                            <input type="tel" name="phone" id="phone" class="form-control-plaintext" value="<?php echo $user->phone ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
             <div class="card wp-settings" style="border-radius: 0; padding: 8px 12px;">
                 <div class="card-body">
 
