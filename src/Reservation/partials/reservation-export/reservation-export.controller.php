@@ -77,6 +77,9 @@ foreach ($result as $row) {
                 <th scope="col" id="title" class="manage-column column-title column-primary sortable desc">
                     Anschrift
                 </th>
+
+                <th class="" data-colname="E-Mail">E-Mail</th>
+                <th class="" data-colname="Telefon">Telefon</th>
                 <th scope="col" id="author" class="manage-column column-author">Letzer Besuch</th>
             </tr>
         </thead>
@@ -100,6 +103,8 @@ foreach ($result as $row) {
                         <?php echo $user->address->zip ?>
                         <?php echo $user->address->city ?>
                     </td>
+                    <td class="" data-colname="E-Mail"><?php echo $user->email  ?></td>
+                    <td class="" data-colname="Telefon"><?php echo $user->phone  ?></td>
                     <td class="" data-colname="Letzter Besuch">
                         <?php echo $user->_last_visit ?>
                     </td>
