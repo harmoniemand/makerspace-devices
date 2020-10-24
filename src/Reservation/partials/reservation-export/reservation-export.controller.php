@@ -42,9 +42,9 @@ ORDER BY mpl_datetime DESC
 $result = $wpdb->get_results($sql_all);
 
 foreach ($result as $row) {
-    if (isset($row->uid)) {
-        $user = $user_repo->Read($row->uid);
-        $user->_last_visit = $row->last_visit;
+    if (isset($row->mpl_user_id)) {
+        $user = $user_repo->Read($row->mpl_user_id);
+        $user->_last_visit = $row->mpl_datetime;
         array_push($users, $user);
     } else if(isset($row->first_name)) {
         array_push($users, (object) array(
