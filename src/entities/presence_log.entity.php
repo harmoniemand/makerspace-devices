@@ -137,5 +137,11 @@ class PresenceLogEntity
 
         $sql = "ALTER TABLE makerspace_presence_logs ALTER COLUMN mpl_user_id NULL;";
         $wpdb->get_results($sql);
+        
+        $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_phone CHAR(50)";
+        $wpdb->get_results($sql);
+        
+        $sql = "ALTER TABLE makerspace_presence_logs ADD COLUMN mpl_temp_visitor_email CHAR(150)";
+        $wpdb->get_results($sql);
     }
 }

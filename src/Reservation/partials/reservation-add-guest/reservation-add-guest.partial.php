@@ -13,15 +13,19 @@ if (isset($_POST["makerspace_reservation_log_form_nonce"])) {
         mpl_temp_visitor_id, 
         mpl_temp_visitor_name,
         mpl_temp_visitor_address,
-        mpl_datetime
-    ) values (%s, %s, %s, %s)";
+        mpl_datetime,
+        mpl_temp_visitor_phone,
+        mpl_temp_visitor_email
+    ) values (%s, %s, %s, %s, %s, %s)";
 
     $wpdb->get_results($wpdb->prepare(
         $sql_mp_create_log,
         GuidHelper::GUID(),
         wp_strip_all_tags( $_POST["mse_mpl_name"] ),
         wp_strip_all_tags( $_POST["mse_mpl_city"] . " " . $_POST["mse_mpl_street"] ),
-        get_datetime()->format("Y-m-d H:i:s")
+        get_datetime()->format("Y-m-d H:i:s"),
+        wp_strip_all_tags( $_POST["mse_mpl_phone"] ),
+        wp_strip_all_tags( $_POST["mse_mpl_email"] ),
     ));
 
     $success = "Deine Kontaktdaten wurden hinterlegt und werden in 4 Wochen wieder automatisch gelöscht.";
@@ -60,11 +64,29 @@ if (isset($_POST["makerspace_reservation_log_form_nonce"])) {
         <div class="container">
             <div class="row mt-5">
 
-                <div class="col-12 mt-3">
+            <div class="col-12 mt-3">
                     <div class="form-group row">
                         <label for="mse_mpl_name" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="mse_mpl_name" name="mse_mpl_name" value="" placeholder="" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 mt-3">
+                    <div class="form-group row">
+                        <label for="mse_mpl_phone" class="col-sm-2 col-form-label">Telefon</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mse_mpl_phone" name="mse_mpl_phone" value="" placeholder="" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 mt-3">
+                    <div class="form-group row">
+                        <label for="mse_mpl_email" class="col-sm-2 col-form-label">E-Mail</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="mse_mpl_email" name="mse_mpl_email" value="" placeholder="" required>
                         </div>
                     </div>
                 </div>
