@@ -256,30 +256,30 @@
                             <span class=""><?php echo $r_to->format('H:i') ?></span>
                         </td>
 
-                        <td class="" data-colname="SUs">
+                        <td class="" data-colname="Kontakt" colspan="2">
                             <span class="">
-                                <?php if (get_user_meta($r->mar_user_id, 'ms_user_corona_safetyinstruction', false)) : ?>
-                                    <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_safetyinstruction" name="ms_user_corona_safetyinstruction" value="<?php echo $r->mar_user_id ?>">
-                                        <clr-icon shape="check"></clr-icon>
-                                    </button>
-                                <?php else : ?>
-                                    <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_safetyinstruction" name="ms_user_corona_safetyinstruction" value="<?php echo $r->mar_user_id ?>">
-                                        <clr-icon shape="times"></clr-icon>
-                                    </button>
-                                <?php endif; ?>
-                            </span>
-                        </td>
 
-                        <td class="" data-colname="Anschrift">
-                            <span class="">
-                                <?php if (get_user_meta($r->mar_user_id, 'ms_user_corona_adress', false)) : ?>
-                                    <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_adress" name="ms_user_corona_adress" value="<?php echo $r->mar_user_id ?>">
-                                        <clr-icon shape="check"></clr-icon>
-                                    </button>
+                                <?php
+                                include_once dirname(__FILE__) . "/../../Repositories/UserRepository.php";
+                                $u = (new UserRepository())->Read($r->mar_user_id);
+                                ?>
+
+                                <?php if (!empty($u->phone)) : ?>
+                                    <clr-icon title="phone" shape="check"></clr-icon>
                                 <?php else : ?>
-                                    <button type="submit" class="btn btn-link btn-sm" id="ms_user_corona_adress" name="ms_user_corona_adress" value="<?php echo $r->mar_user_id ?>">
-                                        <clr-icon shape="times"></clr-icon>
-                                    </button>
+                                    <clr-icon title="phone" shape="times"></clr-icon>
+                                <?php endif; ?>
+
+                                <?php if (!empty($u->email)) : ?>
+                                    <clr-icon title="email" shape="check"></clr-icon>
+                                <?php else : ?>
+                                    <clr-icon title="email" shape="times"></clr-icon>
+                                <?php endif; ?>
+
+                                <?php if (count($u->address) > 0) : ?>
+                                    <clr-icon title="address" shape="check"></clr-icon>
+                                <?php else : ?>
+                                    <clr-icon title="address" shape="times"></clr-icon>
                                 <?php endif; ?>
                             </span>
                         </td>
