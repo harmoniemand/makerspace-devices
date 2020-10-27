@@ -22,6 +22,7 @@ var chart = new Chart(ctx, {
             ?>],
         datasets: [{
             label: 'Visitors',
+            order: 1,
             backgroundColor: 'rgb(255, 99, 132)',
             borderColor: 'rgb(255, 99, 132)',
             data: [<?php
@@ -31,11 +32,33 @@ var chart = new Chart(ctx, {
             }
 
             ?>]
+        },
+        {
+            label: 'Guests',
+            order: 2,
+            backgroundColor: 'rgb(100, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [<?php
+            
+            foreach ($dates as $date) {
+                echo $date->guests . ",";
+            }
+
+            ?>]
         }]
     },
 
     // Configuration options go here
-    options: {}
+    options: {
+        scales: {
+            xAxes: [{
+                stacked: true
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
 });
 
 </script>
