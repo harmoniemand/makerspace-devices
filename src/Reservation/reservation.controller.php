@@ -331,7 +331,14 @@ class ReservationEntity
         $role_editor->add_cap('ms_checkin', true);
     }
 
-    // add the example_role
+    public function renderExport()
+    {
+        if (current_user_can('edit_posts')) {
+            if ($_SERVER['REQUEST_URI'] == '/downloads/export-visitors.csv') {
+                require dirname(__FILE__) . '/partials/export/export.controller.php';
+            }
+        }
+    }
 
 
     public function register()
@@ -343,6 +350,9 @@ class ReservationEntity
         add_action('init', array($this, 'register_Shortcodes'));
         add_action('wp_dashboard_setup', array($this, 'register_dashboard_widgets'));
         add_action('rest_api_init', array($this, 'register_api_endpoints'));
+
+        add_action('template_redirect', array($this, 'renderExport'));
+
     }
 
     public function activate()
