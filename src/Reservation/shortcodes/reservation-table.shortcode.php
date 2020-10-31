@@ -3,6 +3,17 @@
 global $wpdb;
 global $atts;
 
+$closed_dates = array(
+    (object) array(
+        "start" => new DateTime("2020-09-14"),
+        "end" => new DateTime("2020-09-16")
+    ),
+    (object) array(
+        "start" => new DateTime("2020-11-02"),
+        "end" => new DateTime("2020-11-30")
+    ),
+);
+
 $visitor_limit = get_option("makerspace_visitor_limit");
 
 $weekdays = array();
@@ -86,14 +97,23 @@ foreach ($weekdays as $day) {
 
         <?php foreach ($weekdays as $day) : ?>
 
-            <?php if ($day->date->format('d.m.') == "14.09." || $day->date->format('d.m.') == "15.09." || $day->date->format('d.m.') == "16.09.") : ?>
+
+            <?php
+            $closed = false;
+
+            foreach ($closed_dates as $closed_date) {
+                if ($day->date->format("Y-m-d") >= $closed_date->start->format("Y-m-d") && $day->date->format("Y-m-d") <= $closed_date->end->format("Y-m-d")) {
+                    $closed = true;
+                }
+            }
+            ?>
+
+            <?php if ($closed) : ?>
                 <div class="col-11 col-md-6 col-lg border">
                     <h3><?php echo dayToString($day->date->format('w')); ?></h3>
                     <h6><?php echo $day->date->format('d.m.'); ?></h6>
                     <div class="">
-
                         Maker Space geschlossen
-
                     </div>
                 </div>
             <?php else : ?>
