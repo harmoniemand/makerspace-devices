@@ -47,10 +47,22 @@ class LdapHelper
         }
     }
 
-    public static function sanitize($query) {
+    public static function sanitize($query)
+    {
+
+        $arr_search = array('\\', '*', '(', ')');
+        $arr_replace = array('\5c', '\2a', '\28', '\29');
+
+        $query = str_replace($arr_search, $arr_replace , $query);
+        for ($i = 0; $i < strlen($query); $i++) {
+            $char = substr($query, $i, 1);
+            if (ord($char) < 32) {
+                $hex = dechex(ord($char));
+                if (strlen($hex) == 1) $hex = '0' . $hex;
+                $query = str_replace($char, '\\' . $hex, $query);
+            }
+        }
 
         return $query;
     }
-
-
 }
