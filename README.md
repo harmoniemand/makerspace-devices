@@ -15,7 +15,7 @@ Due to COVID19 we are forced to offer timeslots for our visitors, as we could on
 
 ![screenshot](docs/b1.png)
 
-### POS - Deck
+### CheckIn - Deck
 
 For logging visitors arriving/leaving the maker space. 
 It is also showing, if you got the needed contact information and security/healt instructions for your visitors.
@@ -24,7 +24,7 @@ It is also showing, if you got the needed contact information and security/healt
 
 
 
-### POS - Timeline
+### CheckIn - Timeline
 
 Got some timelines to see the planned arrivals of your visitors.
 
