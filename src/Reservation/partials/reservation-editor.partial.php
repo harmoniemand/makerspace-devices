@@ -19,7 +19,7 @@ $closed_dates = array(
     ),
     (object) array(
         "start" => new DateTime("2020-12-31"),
-        "end" => new DateTime("2021-01-31")
+        "end" => new DateTime("2021-04-06")
     ),
 );
 

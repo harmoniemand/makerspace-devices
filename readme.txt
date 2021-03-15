@@ -1,3 +1,17 @@
+=== Plugin Name ===
+
+Contributors: harmoniemand
+Plugin Name: Maker Space Management
+Plugin URI: https://github.com/maker-space-experimenta/makerspace-management
+Tags: maker, space
+Author URI: https://hmnd.de/
+Author: harmoniemand
+Requires at least: 2.3
+Tested up to: 2.9
+Stable tag: 1.0
+Version: 1.0
+
+
 # Wordpress Plugin - Maker Space Management
 
 This plugin is developed to manage our maker space. Its general purpose is to cover all of our needs to manage the every day live at maker space experimenta heilbronn.
