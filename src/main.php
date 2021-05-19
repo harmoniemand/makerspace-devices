@@ -91,6 +91,10 @@ if (!class_exists('MS_Devices_Main')) {
 			$usersController = UsersController::instance();
 			$usersController->register();
 
+			require_once dirname(__FILE__) . '/Events/events.posttype.php';
+			$eventPostType = EventPostType::instance();
+			$eventPostType->register();
+
 			// require_once dirname(__FILE__) . '/_Debug/debug.controller.php';
 			// $debugController = DebugController::instance();
 			// $debugController->register();
