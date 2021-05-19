@@ -30,15 +30,23 @@ if (!defined('WPINC')) {
 	die;
 }
 
-define('MSM_FILE', __FILE__);
-define('MSM_DIR', __DIR__);
+if (!defined('MSM_FILE')) {
+	define('MSM_FILE', __FILE__);
+}
 
-define('MSM_DATETIME_FORMAT', "Y-m-d H:i:s");
+if (!defined('MSM_DIR')) {
+	define('MSM_DIR', __DIR__);
+}
 
+if (!defined('MSM_DATETIME_FORMAT')) {
+	define('MSM_DATETIME_FORMAT', "Y-m-d H:i:s");
+}
 
-function get_datetime()
-{
-	return new DateTime(current_time(MSM_DATETIME_FORMAT));
+if (!function_exists('get_datetime')) {
+	function get_datetime()
+	{
+		return new DateTime(current_time(MSM_DATETIME_FORMAT));
+	}
 }
 
 
