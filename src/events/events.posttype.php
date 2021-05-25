@@ -31,6 +31,14 @@ class EventPostType
             //     return true;
             // }
         ));
+
+        register_rest_route('events/v1', '/(?P<event_slug>.+)/register', array(
+            'methods' => 'POST',
+            'callback' => array("EventsController", "Post"),
+            // 'permission_callback' => function () {
+            //     return true;
+            // }
+        ));
     }
 
 
@@ -64,9 +72,57 @@ class EventPostType
     }
 
 
+    public function renderMenuEventList()
+    {
+        require dirname(__FILE__) . '/partials/event-list.partial.php';
+    }
+    public function renderMenuEventDetail()
+    {
+        require dirname(__FILE__) . '/partials/event-detail.partial.php';
+    }
+    public function renderMenuWorkshopDetail()
+    {
+        require dirname(__FILE__) . '/partials/event-workshop-detail.partial.php';
+    }
+
+    public function registerAdminMenu()
+    {
+
+        $icon_url   = 'dashicons-media-code';
+        add_menu_page(
+            "Events",
+            "Events",
+            "add_users",
+            "ms_event_list",
+            array($this, "renderMenuEventList"),
+            $icon_url,
+            6
+        );
+
+        add_submenu_page(
+            "ms_event_list",
+            "Event Details",
+            "Event Details",
+            "add_users",
+            "ms_event_detail",
+            array($this, "renderMenuEventDetail")
+        );
+
+        add_submenu_page(
+            "ms_event_list",
+            "Workshop Details",
+            "Workshop Details",
+            "add_users",
+            "ms_event_workshop_detail",
+            array($this, "renderMenuWorkshopDetail")
+        );
+    }
+
+
     public function register()
     {
-        add_action('init', array($this, 'register_posttype'));
+        add_action('admin_menu', array($this, "registerAdminMenu"));
+        // add_action('init', array($this, 'register_posttype'));
         add_action('rest_api_init', array($this, 'register_endpoints'));
     }
 

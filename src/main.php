@@ -138,6 +138,19 @@ if (!class_exists('MS_Devices_Main')) {
 
 		public static function activate()
 		{
+			// entities
+
+			require_once dirname(__FILE__) . '/entities/event.entity.php';
+			require_once dirname(__FILE__) . '/entities/event-workshop.entity.php';
+			require_once dirname(__FILE__) . '/entities/event-workshop-registration.entity.php';
+
+			EventEntity::create_database_tables();
+			EventWorkshopEntity::create_database_tables();
+			EventWorkshopRegistrationEntity::create_database_tables();
+
+
+			// Types
+
 			require_once dirname(__FILE__) . '/Reservation/reservation.controller.php';
 			$reservation = ReservationEntity::instance();
 			$reservation->activate();
