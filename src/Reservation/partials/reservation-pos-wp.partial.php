@@ -242,7 +242,7 @@
                                     <clr-icon title="email" shape="times"></clr-icon>
                                 <?php endif; ?>
 
-                                <?php if (count($u->address) > 0) : ?>
+                                <?php if ($u->address != null) : ?>
                                     <clr-icon title="address" shape="check"></clr-icon>
                                 <?php else : ?>
                                     <clr-icon title="address" shape="times"></clr-icon>
