@@ -8,7 +8,7 @@
     <ul class="subsubsub">
         <li class="all">
             <a>
-                Angemeldet <span class="count">(<?php echo count($reservations) ?>)</span> |
+                Angemeldet <span class="count">(<?php echo count($viewmodel->table_data) ?>)</span> |
             </a>
         </li>
 
