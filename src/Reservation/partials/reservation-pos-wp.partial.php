@@ -52,40 +52,6 @@
     <form method="POST" action="?<?php echo http_build_query($url_data) ?>">
         <?php wp_nonce_field(basename(__FILE__), 'makerspace_advance_refistration_nonce'); ?>
 
-        <!-- <p class="search-box">
-            <label class="screen-reader-text" for="post-search-input">Seiten durchsuchen:</label>
-            <input type="search" id="post-search-input" name="s" value="">
-            <input type="submit" id="search-submit" class="button" value="Seiten durchsuchen"></p> -->
-
-        <!-- <div class="tablenav top">
-
-            <div class="alignleft actions bulkactions">
-                <label for="bulk-action-selector-top" class="screen-reader-text">Mehrfachaktion wählen</label><select name="action" id="bulk-action-selector-top">
-                    <option value="-1">Mehrfachaktionen</option>
-                    <option value="edit" class="hide-if-no-js">Bearbeiten</option>
-                    <option value="trash">In den Papierkorb verschieben</option>
-                </select>
-                <input type="submit" id="doaction" class="button action" value="Übernehmen">
-            </div>
-            <div class="alignleft actions">
-                <label for="filter-by-date" class="screen-reader-text">Nach Datum filtern</label>
-                <select name="m" id="filter-by-date">
-                    <option selected="selected" value="0">Alle Daten</option>
-                    <option value="202006">Juni 2020</option>
-                    <option value="202005">Mai 2020</option>
-                    <option value="202004">April 2020</option>
-                    <option value="202003">März 2020</option>
-                    <option value="201911">November 2019</option>
-                    <option value="201909">September 2019</option>
-                    <option value="201905">Mai 2019</option>
-                    <option value="201904">April 2019</option>
-                    <option value="201901">Januar 2019</option>
-                </select>
-                <input type="submit" name="filter_action" id="post-query-submit" class="button" value="Auswahl einschränken"> </div>
-            <div class="tablenav-pages one-page"><span class="displaying-num"><?php echo count($reservations) ?> Einträge</span>
-                
-            <br class="clear">
-        </div> -->
         <h2 class="screen-reader-text">Seitenliste</h2>
         <table class="wp-list-table widefat fixed striped pages">
             <thead>
