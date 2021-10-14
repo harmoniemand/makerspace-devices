@@ -90,7 +90,7 @@ class RegistrationEntity
 
             if (is_wp_error($user_signon)) {
                 error_log("error while logging in");
-                error_log($user_signon);
+                // error_log($user_signon);
 
                 $login_error = $user_signon->get_error_message();
                 // print_r($user);
