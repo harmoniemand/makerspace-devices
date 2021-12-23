@@ -78,7 +78,7 @@ global $login_error;
                         <div class="col-12">
                             <div class="form-group row">
                                 <div class="col-12">
-                                    <a href="/reset-password">
+                                    <a href="https://login.makerspace.experimenta.science/auth/realms/makerspace/login-actions/reset-credentials?client_id=wordpress">
                                         Ich habe mein Passwort vergessen
                                     </a>
                                 </div>
