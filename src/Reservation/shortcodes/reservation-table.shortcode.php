@@ -24,6 +24,14 @@ $closed_dates = array(
         "start" => new DateTime("2021-09-14"),
         "end" => new DateTime("2021-09-15")
     ),
+    (object) array(
+        "start" => new DateTime("2021-12-24"),
+        "end" => new DateTime("2021-12-26")
+    ),
+    (object) array(
+        "start" => new DateTime("2021-12-31"),
+        "end" => new DateTime("2022-01-1")
+    ),
 );
 
 $visitor_limit = get_option("makerspace_visitor_limit");
